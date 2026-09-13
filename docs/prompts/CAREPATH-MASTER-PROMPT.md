@@ -1,14 +1,15 @@
-# CarePath AI — Complete Master Build, Enhancement & Hackathon Delivery Prompt
+# CarePath AI — v0.5 Complete Master Build, Federated Health Platform & Hackathon Delivery Prompt
 
 **Repository:** `samcools/carepath-ai`  
 **Canonical specification path:** `docs/prompts/CAREPATH-MASTER-PROMPT.md`  
 **Product:** CarePath AI  
 **Strategic proposition:** **One Patient. One Journey. One Trusted Health Record.**  
-**Referral proposition:** **From Referral to Care — Without Losing the Patient in Between**  
+**Referral proposition:** **From Referral to Care — Without Losing the Patient in Between.**  
 **Context:** SITA Hackathon / South African Public and Private Healthcare  
 **Brand:** Pyrneo  
 **Assistant:** Ayanda  
-**Document role:** Single source of truth for implementation, enhancement, validation and release decisions.
+**Document role:** Single source of truth for implementation, enhancement, security, validation, deployment and hackathon demonstration decisions.  
+**Version intent:** This v0.5 prompt supersedes conflicting implementation guidance in earlier CarePath prompt addenda while preserving completed functionality that remains compatible with this specification.
 
 ---
 
@@ -40,671 +41,888 @@ Act as one coordinated senior multidisciplinary product and engineering team cov
 - quality engineering and automated testing;
 - hackathon demo and release engineering.
 
-Your mandate is to **build CarePath AI by adapting and extending the proven Project Guardian operating model into a longitudinal health-record, interoperability, referral and care-coordination platform**.
-
-Use the engineering and interaction patterns already evolved through Project Guardian, AquaFlow AI and HomeFlow AI:
-
-- secure authentication;
-- protected routes;
-- role-aware dashboards;
-- task/work-item workflow primitives;
-- ownership, assignment, due dates and status;
-- comments, notes and activity history;
-- user, audit, security, AI and system logs;
-- explainable exceptions;
-- persistent text AI assistant;
-- persistent voice AI assistant;
-- hands-free page navigation;
-- authorised voice-driven actions;
-- responsive executive dashboards;
-- human approval gates;
-- server-side permission enforcement;
-- complete auditability;
-- deterministic synthetic hackathon data;
-- deployment-ready source control.
-
-Do **not** copy Human Settlements or municipal-water domain concepts into CarePath. Reuse the platform architecture, secure action model, voice model, activity model, audit model and responsive UX approach, then implement healthcare-specific domain logic.
+Your mandate is to build CarePath AI as a **governed federated national health-record and care-coordination platform** using the strongest operating patterns evolved through Project Guardian, AquaFlow AI and HomeFlow AI.
 
 Follow this delivery sequence:
 
-**Inspect → Preserve → Model → Build → Secure → Integrate → Test → Optimise → Document → Demonstrate.**
+**Inspect → Preserve → Model → Build → Secure → Integrate → Test → Optimise → Document → Demonstrate → Deploy → Verify.**
 
-If working code exists, inspect it before replacing anything. Preserve stable functionality that remains compatible with this specification.
+If working code exists, inspect it before replacing anything. Preserve stable compatible functionality. Do not create duplicate dashboards, duplicate AI assistants, duplicate voice controllers, parallel workflow engines, competing data models or multiple inconsistent sources of truth.
 
-Do not create duplicate dashboards, duplicate navigation systems, duplicate AI assistants, duplicate voice controllers, duplicate data models or parallel workflow engines.
+Never claim that a feature, integration, deployment, clinical validation, government endorsement, interoperability profile, production control or test is complete unless it has actually been implemented and verified.
 
-Never claim that a feature, integration, security control, deployment, clinical validation, health-system connection, interoperability profile, government endorsement or test is complete unless it has actually been implemented and verified.
-
-All source, documentation, configuration templates, assets, seed data, tests, deployment definitions, presentation-support assets and release notes must remain in the `samcools/carepath-ai` repository.
+All source, documentation, assets, seed data, migrations, tests, deployment definitions, demo scripts, release notes and presentation-support material must remain in `samcools/carepath-ai`.
 
 ---
 
 # 2. STRATEGIC PRODUCT VISION
 
-CarePath AI is no longer only a referral-management product.
+CarePath AI is a secure digital-health operating layer that creates the experience of **one longitudinal patient record and one accountable patient journey across public and private healthcare**, while existing source systems retain authoritative clinical data where appropriate.
 
-Build CarePath AI as a secure **national longitudinal health-record and care-coordination platform** that can give authorised providers a coherent patient view across public and private healthcare while preserving governance, provenance and institutional system boundaries.
+The product must never be positioned as one giant central database that replaces every hospital, clinic, laboratory, pharmacy or private-practice system.
 
-The strategic proposition is:
+The architectural principle is:
+
+> **Federated source systems + trusted identity + standards-based exchange + one authorised longitudinal view + governed care orchestration.**
+
+North-star proposition:
 
 > **One Patient. One Journey. One Trusted Health Record.**
 
-The operating proposition remains:
+North-star journey:
 
-> **From Referral to Care — Without Losing the Patient in Between.**
+**Patient arrives → Identity resolved → OneRecord retrieved → allergies/history visible → referral created → destination matched → capacity checked → appointment coordinated → transfer arranged if needed → patient guided → specialist updates care record → referring clinician receives closure → Command Centre confirms completion.**
 
-The platform should connect:
-
-**Identity → Health Record → Authorised Exchange → Referral → Appointment → Care Event → Follow-up → Feedback → Longitudinal Record → Accountability.**
-
-The north-star question is:
-
-> **Can the right authorised healthcare professional access the right patient information, at the right time, for the right purpose, and coordinate the next care action without losing accountability?**
-
-CarePath must not become another isolated electronic medical record, static dashboard or general-purpose medical chatbot.
+The patient should remain digitally visible throughout the healthcare journey.
 
 ---
 
-# 3. CAREPATH PRODUCT PILLARS
+# 3. NON-NEGOTIABLE CLINICAL SAFETY BOUNDARY
 
-Build six integrated product capabilities.
+CarePath coordinates information, access and healthcare workflows. It does **not** replace clinical judgement.
 
-## 3.1 CarePath OneRecord™
-A coherent longitudinal patient view assembled from trusted authorised sources.
+CarePath and Ayanda must not autonomously:
 
-## 3.2 CarePath Exchange™
-A standards-aware interoperability layer for public and private healthcare systems.
-
-## 3.3 CarePath Journey™
-Referral, appointment, transfer, discharge, follow-up and patient-navigation orchestration.
-
-## 3.4 CarePath Health Passport™
-A patient-facing view of relevant health information, appointments, referrals, documents and authorised access history.
-
-## 3.5 CarePath Ayanda™
-One multilingual text-and-voice assistant for authorised retrieval, explanation, navigation and governed workflow actions.
-
-## 3.6 CarePath Command™
-Operational and executive visibility over referral leakage, patient-journey exceptions, service pressure, tasks, activity and appropriately aggregated analytics.
-
-These are parts of one platform, not separate disconnected applications.
-
----
-
-# 4. CRITICAL ARCHITECTURAL POSITIONING — ONE LOGICAL RECORD, NOT ONE GIANT DATABASE
-
-Do **not** design or market CarePath as one enormous central database containing every South African medical record.
-
-Design it as a **logical longitudinal record** that can assemble a coherent authorised patient view while trusted source systems remain systems of record where appropriate.
-
-Architecture principles:
-
-- one patient-facing and clinician-facing longitudinal view;
-- source-system provenance preserved;
-- distributed/federated integration supported;
-- authoritative source systems remain authoritative;
-- duplicate clinical facts are reconciled by provenance and source rules, not silently overwritten;
-- every material data element should carry source and timestamp metadata where available;
-- CarePath must be able to distinguish locally entered CarePath data from externally sourced data;
-- external records must not be presented as current if source freshness is unknown;
-- no fabricated national integration claims.
-
----
-
-# 5. NON-NEGOTIABLE CLINICAL SAFETY BOUNDARY
-
-CarePath AI coordinates information and care workflows. It does **not** replace clinical judgement.
-
-The platform must not autonomously:
-
-- diagnose a patient;
-- prescribe medication;
+- diagnose;
+- prescribe;
 - initiate or change treatment;
-- recommend clinical treatment as an authority;
-- override a clinician;
+- recommend treatment as a clinical authority;
 - discharge a patient;
 - cancel clinically required care;
-- determine emergency severity and act independently from unrestricted free text;
-- make eligibility decisions requiring statutory or clinical judgement;
-- fabricate allergies, diagnoses, results, medication, facility capacity or appointment availability.
+- override an authorised clinician;
+- determine emergency severity independently from unrestricted free text;
+- fabricate allergies, diagnoses, medication, results, appointments, beds, ambulance availability, facility services or clinical outcomes;
+- rank hospitals as clinically superior using raw mortality/recovery percentages;
+- silently resolve contradictory clinical facts.
 
 Ayanda may:
 
-- retrieve authorised patient information;
-- summarise authorised records with provenance;
-- explain administrative/referral status;
-- navigate the application;
-- identify workflow exceptions;
-- recommend destination options from approved service-directory rules;
+- retrieve authorised data;
+- explain provenance and workflow state;
+- summarise authorised records;
+- navigate the platform;
+- identify operational exceptions;
+- recommend facility options from approved structured rules;
 - draft administrative content;
-- execute authorised administrative actions only through governed server-side tools and required confirmation.
+- execute permitted administrative actions through governed server-side tools and confirmation gates.
 
-Where a request crosses into diagnosis, prescribing or treatment advice, Ayanda must defer to an authorised healthcare professional while continuing to support administrative navigation and record retrieval.
-
----
-
-# 6. PROJECT GUARDIAN BASELINE — PRESERVE THE STRONGEST PATTERNS
-
-Mandatory inherited platform patterns:
-
-- secure login;
-- protected routes;
-- backend services;
-- persistent state;
-- responsive dashboards;
-- role-based navigation;
-- task/work-item engine;
-- assignment/reassignment;
-- due dates and priorities;
-- comments and notes;
-- recent activity;
-- full record history;
-- user logs;
-- audit logs;
-- security logs;
-- AI action logs;
-- system/error logs;
-- text AI assistant;
-- voice assistant;
-- hands-free navigation;
-- voice-triggered governed actions;
-- multilingual South African interaction;
-- human-like African voice preference;
-- low-latency commands;
-- mobile/tablet support;
-- human confirmation gates.
-
-Project Guardian generic project-management primitives may be reused internally where useful, but CarePath end-user terminology must remain healthcare relevant.
+Where a user asks for diagnosis, prescribing or treatment advice, Ayanda must defer to an authorised healthcare professional while continuing to assist with navigation, records and workflow.
 
 ---
 
-# 7. PRODUCT IDENTITY AND VISUAL LANGUAGE
+# 4. REQUIRED PRODUCT CAPABILITIES — THE 12-POINT BASELINE
 
-Product name:
+CarePath is not complete unless the platform architecture and implementation roadmap address all twelve capabilities below.
 
-# CarePath AI
+## 4.1 Unified Patient Record — CarePath OneRecord™
 
-Primary strategic line:
+Provide a longitudinal, source-aware patient record spanning:
 
-**One Patient. One Journey. One Trusted Health Record.**
-
-Secondary referral line:
-
-**From Referral to Care — Without Losing the Patient in Between**
-
-Brand rules:
-
-- Pyrneo is the parent/solution brand;
-- CarePath AI is the product identity;
-- use the approved Pyrneo wordmark asset supplied by the user;
-- do not fabricate or regenerate a Pyrneo logo where an approved asset exists;
-- use the approved CarePath logo asset where supplied;
-- preserve transparent backgrounds where appropriate;
-- do not show legacy product names in the live product;
-- keep the visual experience calm, premium, trustworthy, African, healthcare-appropriate and government-ready.
-
-Dashboard language:
-
-- deep navy / royal-blue foundation;
-- constrained centred content width;
-- responsive gutters;
-- clear KPI cards;
-- restrained status colours;
-- dense but readable executive hierarchy;
-- consistent iconography;
-- persistent Ayanda launcher;
-- no text overlap;
-- no uncontrolled edge-to-edge stretching;
-- no diagram connectors crossing node labels or circles;
-- no text overflowing cards;
-- images aligned to consistent grids.
-
-For presentation assets, preserve the approved first-slide design language: full-width hero imagery, clean Pyrneo wordmark, CarePath identity, controlled overlays and professional spacing.
-
----
-
-# 8. APPLICATION INFORMATION ARCHITECTURE
-
-Recommended authenticated navigation:
-
-1. **Command Centre**
-2. **OneRecord / Patients**
-3. **Referrals / Journey**
-4. **Appointments**
-5. **Facilities & Services**
-6. **Tasks & Follow-ups**
-7. **Exceptions**
-8. **Health Passport Preview**
-9. **Analytics**
-10. **Activity**
-11. **Audit & Access Logs** — permission controlled
-12. **Administration** — permission controlled
-
-Ayanda must remain accessible from every authenticated page.
-
----
-
-# 9. IDENTITY, PATIENT MATCHING AND MASTER IDENTIFIER STRATEGY
-
-Do not invent a competing national patient number.
-
-The prototype may use synthetic internal identifiers, but the architecture must support future connection to an authoritative patient identity / master-patient-index service.
-
-Design adapters for future authoritative identity matching rather than hard-coding national identity assumptions into the domain model.
-
-Patient matching must never rely on name alone.
-
-Support configurable matching signals such as:
-
-- authoritative patient identifier when available;
-- internal UUID;
-- date of birth;
-- verified demographic fields;
-- source-system patient identifier;
-- source organisation.
-
-In hackathon mode, all identities remain synthetic.
-
----
-
-# 10. CAREPATH ONERECORD™ — LONGITUDINAL PATIENT RECORD
-
-OneRecord is a core product foundation.
-
-The authorised longitudinal view may include, where relevant and supported by source data:
-
-- patient identity and demographics;
-- emergency information;
+- demographics and verified identifiers;
+- emergency information and emergency contacts;
 - allergies and adverse reactions;
-- active and historical diagnoses;
-- chronic conditions;
-- current and historical medication;
-- immunisation records;
-- laboratory results;
-- imaging reports and links;
+- diagnoses and chronic conditions;
+- medication history;
+- vaccination history;
+- encounters;
 - procedures;
 - admissions and discharges;
-- encounters;
-- referrals and referral outcomes;
-- specialist reports;
+- laboratory results;
+- imaging reports and imaging references;
+- referrals and outcomes;
+- appointments;
+- ambulance transfers;
 - care plans;
-- follow-up tasks;
-- relevant documents;
-- treating clinicians;
-- treating facilities;
+- specialist reports;
+- discharge instructions;
+- clinical documents;
+- tasks/follow-ups;
+- care-team members;
+- access history;
 - consent/access context;
-- source-system provenance.
+- source provenance.
 
-Each material clinical datum should support provenance fields such as:
+OneRecord must not pretend to replace every hospital system. Each material item should preserve, where available:
 
 - source system;
-- source facility/organisation;
-- source identifier;
-- author/clinician where available;
-- date recorded;
-- date effective;
-- last updated;
-- confidence/status where applicable;
-- correction/supersession relationship.
-
-The UI must visibly distinguish source, date and status for critical facts such as allergies and medication.
-
----
-
-# 11. ONERECORD USER EXPERIENCE
-
-The patient record screen should not be a giant unstructured medical dump.
-
-Provide clear sections such as:
-
-- Overview;
-- Critical Alerts;
-- Allergies;
-- Medication;
-- Conditions;
-- Results;
-- Encounters;
-- Procedures;
-- Referrals;
-- Documents;
-- Timeline;
-- Care Team;
-- Access History.
-
-Support:
-
-- chronological timeline;
-- source filtering;
-- facility filtering;
-- record-type filtering;
-- date filtering;
-- provenance detail;
-- print/export only with appropriate permission;
-- clear stale/unknown-source indicators where relevant.
-
-Never hide provenance merely to make the UI look simpler.
-
----
-
-# 12. CAREPATH HEALTH PASSPORT™
-
-Create a patient-facing experience using synthetic data for the hackathon.
-
-Possible patient capabilities:
-
-- view current medication;
-- view allergies;
-- view diagnoses/conditions appropriate for patient display;
-- view appointments;
-- view referrals and status;
-- view selected laboratory/imaging reports where authorised;
-- view discharge instructions;
-- view care documents;
-- view treating facilities;
-- view access history;
-- see which institution accessed the record and when;
-- manage contact preferences;
-- manage sharing/consent preferences only where legally and operationally applicable.
-
-Patient-facing wording must be clear and non-technical.
-
-Do not expose clinician-only notes or restricted records merely because the patient exists in OneRecord.
-
----
-
-# 13. CAREPATH EXCHANGE™ — INTEROPERABILITY LAYER
-
-Build a clean interoperability adapter layer separate from core domain logic.
-
-Support FHIR-compatible conceptual mappings including:
-
-- Patient → `Patient`;
-- clinician → `Practitioner` / `PractitionerRole`;
-- organisation → `Organization`;
-- facility → `Location`;
-- service → `HealthcareService`;
-- referral → `ServiceRequest`;
-- task/follow-up → `Task`;
-- appointment → `Appointment`;
-- encounter → `Encounter`;
-- allergy → `AllergyIntolerance`;
-- condition → `Condition`;
-- medication → `MedicationRequest` / relevant medication resources;
-- observation/result → `Observation`;
-- diagnostic report → `DiagnosticReport`;
-- procedure → `Procedure`;
-- document → `DocumentReference`;
-- communication → `Communication` / `CommunicationRequest`;
-- audit → `AuditEvent`;
-- provenance → `Provenance`.
-
-Do not claim national-profile conformance until an actual implementation guide/profile set has been selected, implemented and tested.
-
-Adapters/stubs should support future connection to:
-
-- public hospital/clinic information systems;
-- private hospital systems;
-- GP/practice systems;
-- laboratories;
-- pharmacies;
-- imaging providers;
-- health-information exchanges;
-- patient identity services;
-- enterprise identity providers;
-- appointment systems;
-- messaging gateways.
-
-A mock connector must always be labelled mock/demo.
-
----
-
-# 14. DIGITAL REFERRAL WORKSPACE — CAREPATH JOURNEY™
-
-Authorised users must be able to:
-
-- create referral drafts;
-- select/search a patient;
-- retrieve authorised OneRecord context;
-- capture referral reason;
-- select requested service;
-- set administrative priority from approved values;
-- select or confirm destination facility/service;
-- add summary/notes;
-- attach supporting demo documents;
-- save drafts;
-- submit referrals;
-- receive referrals;
-- request additional information;
-- supply additional information;
-- accept referrals;
-- decline with reason;
-- redirect with reason;
-- assign a receiving coordinator;
-- schedule appointment;
-- reschedule/cancel appointment;
-- record attended/missed outcome;
-- create follow-up tasks;
-- capture return feedback;
-- close a referral;
-- reopen when authorised;
-- view the complete journey timeline;
-- write referral outcomes back into the longitudinal record where appropriate.
-
-No visible action button may be a dead button.
-
-All state-changing actions must persist and generate activity/audit events.
-
----
-
-# 15. REFERRAL STATE MACHINE
-
-Implement an explicit server-side state machine.
-
-Recommended states:
-
-- `DRAFT`
-- `SUBMITTED`
-- `RECEIVED`
-- `INFO_REQUESTED`
-- `ACCEPTED`
-- `DECLINED`
-- `REDIRECTED`
-- `SCHEDULED`
-- `PATIENT_NOTIFIED`
-- `ATTENDED`
-- `MISSED`
-- `CANCELLED`
-- `FEEDBACK_PENDING`
-- `FOLLOWUP_REQUIRED`
-- `CLOSED`
-- `REOPENED`
-
-Typical path:
-
-`DRAFT → SUBMITTED → RECEIVED → ACCEPTED → SCHEDULED → PATIENT_NOTIFIED → ATTENDED → FEEDBACK_PENDING → CLOSED`
-
-Every successful transition records actor, role, organisation/facility, previous state, new state, timestamp, reason where relevant, source channel and correlation ID.
-
-The browser and LLM may request transitions; the server decides whether they are valid.
-
----
-
-# 16. FACILITY & SERVICE DIRECTORY
-
-Support:
-
-- facility name;
-- organisation;
-- public/private indicator for synthetic demo purposes;
-- facility type;
-- district;
-- province;
-- address text;
-- services offered;
-- contact channels;
-- operating information;
-- referral instructions;
-- routing priority;
-- configured availability/status metadata.
-
-Do not present configured demo availability as real-time factual availability.
-
----
-
-# 17. EXPLAINABLE DESTINATION RECOMMENDATION
-
-Ayanda may recommend destination options only from approved structured facility/service and referral-route data.
-
-Display the basis of recommendation, for example:
-
-- service match;
-- referral pathway;
-- geography/district rule;
-- facility type;
-- configured administrative rule.
-
-A human must confirm the destination before submission.
-
-Do not imply live capacity or clinical suitability unless authoritative data actually supports it.
-
----
-
-# 18. APPOINTMENTS, FOLLOW-UP AND PATIENT NAVIGATION
-
-Support:
-
-- proposed appointment;
-- confirmation;
-- rescheduling;
-- cancellation;
-- attendance;
-- missed appointment;
-- follow-up required;
-- patient communication state.
-
-Notification abstraction:
-
-- in-app;
-- SMS adapter;
-- WhatsApp adapter;
-- email adapter.
-
-Hackathon mode may simulate delivery.
-
-Use minimum necessary information in notifications.
-
----
-
-# 19. EXCEPTION / REFERRAL LEAKAGE ENGINE
-
-Implement configurable explainable operational rules such as:
-
-- `AWAITING_ACCEPTANCE > threshold`;
-- `MISSING_REQUIRED_INFO`;
-- `APPOINTMENT_UNCONFIRMED`;
-- `MISSED_NO_FOLLOWUP`;
-- `STALE_REFERRAL`;
-- `MISSING_RETURN_FEEDBACK`;
-- `FOLLOWUP_OVERDUE`.
-
-Each exception must expose:
-
-- triggering rule;
-- record;
-- owner;
-- age/elapsed time;
-- evidence;
-- recommended permitted next action;
-- resolution state;
-- audit history.
-
-Rules are operational decision support, not clinical risk scores.
-
----
-
-# 20. CAREPATH COMMAND™
-
-The default management landing experience should make both longitudinal care and referral operations visible.
-
-Suggested cards/panels:
-
-- Open Referrals;
-- Awaiting Acceptance;
-- Appointments Due;
-- Missed Appointments;
-- Stale Referrals;
-- Feedback Pending;
-- Follow-ups Due;
-- Patient Journey Exceptions;
-- Recent Activity;
-- Access/Audit Alerts;
-- Facility/Service Bottlenecks;
-- My Tasks;
-- AI-generated operational briefing grounded in authorised data.
-
-Every KPI must be traceable to stored data.
-
-No fabricated metrics.
-
----
-
-# 21. AYANDA — SINGLE GLOBAL ASSISTANT
+- source organisation/facility;
+- source record identifier;
+- author/clinician;
+- recorded date;
+- effective date;
+- last updated date;
+- status;
+- correction/supersession relationship;
+- freshness indicator.
+
+Contradictory clinical records must remain visible with provenance until reconciled through an authorised workflow.
+
+Recommended OneRecord tabs:
+
+**Summary | Critical Alerts | Allergies | Conditions | Medication | Vaccines | Results | Imaging | Encounters | Procedures | Care Plans | Referrals | Appointments | Transfers | Documents | Timeline | Care Team | Access History.**
+
+## 4.2 Patient Journey & Referral Engine — CarePath Journey™
+
+Support closed-loop care coordination from referral initiation to outcome/closure.
+
+Required functions:
+
+- referral creation and draft;
+- structured referral reason;
+- administrative priority;
+- triage workspace;
+- facility/service matching;
+- capacity-aware routing;
+- geography-aware routing;
+- appointment coordination;
+- referral acknowledgement;
+- request/supply additional information;
+- accept/decline/redirect;
+- ambulance transfer coordination where required;
+- SLA clock;
+- escalation rules;
+- missed-appointment handling;
+- return feedback;
+- specialist closure;
+- referring-clinician closure notification;
+- patient communication;
+- complete journey timeline.
+
+Recommended referral states:
+
+`DRAFT → SUBMITTED → RECEIVED → INFO_REQUESTED / ACCEPTED / DECLINED / REDIRECTED → SCHEDULED → PATIENT_NOTIFIED → ATTENDED / MISSED → FEEDBACK_PENDING / FOLLOWUP_REQUIRED → CLOSED → REOPENED`.
+
+Every transition must persist and record actor, role, organisation, facility, previous state, new state, timestamp, reason, source channel and correlation ID.
+
+## 4.3 CarePath Command Centre™
+
+Build hierarchical operational oversight, not a flat dashboard.
+
+Required hierarchy:
+
+**National → Province → District → City / Municipality → Facility → Service / Department → Patient Journey where authorised.**
+
+Views should support:
+
+- patient-flow volume;
+- referral volume;
+- waiting times;
+- acknowledgement times;
+- appointment lead time;
+- open referrals;
+- stale referrals;
+- missed appointments;
+- unresolved cases;
+- SLA breaches;
+- exceptions;
+- beds/capacity;
+- ambulance availability;
+- active transfers;
+- vaccination follow-up;
+- service bottlenecks;
+- facility pressure;
+- care-team workload;
+- recent activity;
+- audit/security alerts.
+
+National/provincial/district views must prefer aggregate or appropriately de-identified information.
+
+## 4.4 Ayanda AI Clinical Navigation Assistant™
 
 Ayanda is one global assistant identity across the platform.
 
-There must be:
+Requirements:
 
-- one assistant icon system;
-- one chat state;
-- one speech-recognition controller;
-- one speech-synthesis controller;
-- one governed tool gateway.
+- persistent text chat;
+- persistent voice;
+- same icon everywhere;
+- one recognition controller;
+- one TTS controller;
+- close/exit button;
+- conversation reset;
+- low-latency deterministic navigation;
+- multilingual South African language support;
+- role-aware retrieval;
+- record explanation;
+- provenance explanation;
+- workflow assistance;
+- controlled tool execution;
+- confirmation for consequential actions;
+- source-aware answers;
+- uncertainty and limitation messaging;
+- no duplicate voice playback.
 
-Do not create one assistant per page.
+Supported languages, where provider quality is adequate:
 
-Ayanda may answer authorised questions such as:
+English, Afrikaans, isiZulu, isiXhosa, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenda, siSwati and isiNdebele.
 
-- “Summarise this patient’s relevant history.”
-- “Show documented allergies and their provenance.”
-- “What medication is currently recorded?”
-- “When was the most recent relevant result?”
-- “Has this patient previously been referred to cardiology?”
-- “Show referrals waiting more than 24 hours.”
-- “Who changed this referral?”
-- “What changed in this patient journey this week?”
-- “Open the patient’s referral timeline.”
-- “Create a follow-up task.”
+Ayanda must distinguish:
 
-Ayanda must clearly distinguish:
-
-- retrieved facts;
-- configured-rule findings;
+- retrieved fact;
+- configured-rule finding;
+- deterministic calculation;
 - AI summary;
 - AI suggestion.
 
+## 4.5 Emergency Patient Access — Break Glass
+
+Implement this as a working module, not documentation only.
+
+Emergency access workflow:
+
+1. authorised clinician searches/resolves patient;
+2. selects **Break Glass — Emergency Access**;
+3. re-authenticates or completes configured MFA/re-authentication;
+4. selects/captures emergency reason;
+5. facility/organisation context is recorded;
+6. minimum necessary emergency summary is shown;
+7. access is time limited;
+8. every sensitive read/action is logged;
+9. compliance review event is generated;
+10. access automatically expires.
+
+Emergency summary may include, where authoritative:
+
+- allergies;
+- medication;
+- major chronic conditions;
+- recent critical encounters;
+- implants/devices where available;
+- emergency contacts;
+- blood-group information only where authoritative and appropriate;
+- current referral/transfer context.
+
+Break Glass must never silently bypass normal security.
+
+## 4.6 Interoperability Layer — CarePath Exchange™
+
+Build an integration façade separate from domain logic.
+
+Support FHIR-compatible mappings for at least:
+
+- `Patient`;
+- `Practitioner` / `PractitionerRole`;
+- `Organization`;
+- `Location`;
+- `HealthcareService`;
+- `AllergyIntolerance`;
+- `Condition`;
+- `MedicationRequest` / relevant medication resources;
+- `Immunization`;
+- `Observation`;
+- `DiagnosticReport`;
+- `ImagingStudy` reference where implemented;
+- `Encounter`;
+- `Procedure`;
+- `CarePlan`;
+- `ServiceRequest`;
+- `Task`;
+- `Appointment`;
+- `DocumentReference`;
+- `Communication` / `CommunicationRequest`;
+- `AuditEvent`;
+- `Provenance`.
+
+Hackathon implementation should expose demonstrable **mock FHIR/API endpoints** and mock adapters for selected public/private source systems rather than only documenting future integration.
+
+Mock adapters should demonstrate patterns for:
+
+- public clinic/hospital EMR;
+- private hospital/GP system;
+- laboratory;
+- pharmacy;
+- imaging provider;
+- appointment system;
+- patient identity/MPI;
+- messaging gateway.
+
+Do not claim formal FHIR conformance or national-profile certification until actual conformance testing is completed.
+
+## 4.7 Consent, Identity & Access Management
+
+Create a visible **Consent & Identity Centre**.
+
+Identity requirements:
+
+- internal UUID;
+- source-system patient identifiers;
+- master patient index abstraction;
+- future HPRS/HPRN/authoritative identity adapter;
+- configurable demographic matching;
+- duplicate-patient review queue;
+- no name-only patient matching.
+
+Access requirements:
+
+- RBAC;
+- ABAC/context policy;
+- care relationship;
+- facility/organisation scope;
+- purpose of use;
+- least privilege;
+- session expiry;
+- future enterprise SSO/OIDC/Entra integration;
+- MFA/re-authentication for sensitive actions;
+- Break Glass.
+
+Consent/governance requirements:
+
+- sharing preferences where legally applicable;
+- consent history;
+- revocation/expiry where applicable;
+- proxy/caregiver relationships;
+- temporary sharing;
+- purpose record;
+- provenance;
+- patient-facing access-history view.
+
+Do not present one simplistic consent model as universal legal advice.
+
+## 4.8 Patient Portal — CarePath Health Passport™
+
+Patient experience should include:
+
+- own longitudinal summary;
+- referrals and referral status;
+- appointments and rescheduling/cancellation where policy permits;
+- medication information;
+- vaccination information;
+- selected results/documents;
+- care journey;
+- discharge instructions;
+- patient transfer status;
+- notifications;
+- consent/sharing controls where implemented;
+- access history;
+- communication preferences;
+- secure care-team messaging when implemented;
+- caregiver/proxy support architecture;
+- Ayanda patient mode.
+
+Do not expose clinician-only notes or restricted records.
+
+## 4.9 Healthcare Professional Workspace
+
+Implement role-specific professional workspaces rather than forcing every user into the same generic dashboard.
+
+Clinician workspace should include:
+
+- My Patients;
+- My Referrals;
+- My Appointments;
+- Results Awaiting Review;
+- Requests for Information;
+- My Tasks;
+- Follow-ups Due;
+- Escalations;
+- Messages;
+- Today / action queue.
+
+Coordinator workspace should emphasise:
+
+- referral intake;
+- SLA breaches;
+- appointment allocation;
+- capacity;
+- transfers;
+- patient contact;
+- missing information;
+- closure/feedback.
+
+Specialist, nurse, pharmacist, lab technologist, manager, auditor, navigator and patient roles must have appropriately different navigation and actions.
+
+Workspace primitives:
+
+- tasks;
+- ownership;
+- assignment/reassignment;
+- due dates;
+- priorities;
+- comments;
+- notes;
+- attachments;
+- hand-off notes;
+- secure messages;
+- exception resolution;
+- audit history.
+
+## 4.10 AI Early-Warning Engine — CarePath Watch™
+
+Implement explainable operational early warning without presenting unvalidated AI outputs as diagnoses.
+
+Detect at minimum:
+
+- missed appointments;
+- referral acknowledgement beyond threshold;
+- stale referral;
+- missing required information;
+- appointment not confirmed;
+- missed appointment with no follow-up;
+- missing specialist return feedback;
+- overdue follow-up task;
+- facility capacity constraint;
+- ambulance/transfer delay;
+- vaccination follow-up overdue;
+- repeated redirect/decline;
+- abnormal workflow delay compared with configured operational thresholds.
+
+Every alert must show:
+
+- why it fired;
+- rule/model name;
+- evidence;
+- threshold;
+- owner;
+- age;
+- recommended permitted administrative action;
+- escalation level;
+- resolution status;
+- audit history.
+
+If statistical or predictive models are later added, show model version, confidence/calibration information where meaningful, validation status and monitoring. Do not label workflow risk as medical diagnosis.
+
+## 4.11 Population Health Intelligence
+
+Create a dedicated aggregated/de-identified intelligence module for authorised health authorities.
+
+Potential views:
+
+- patient-flow trends;
+- referral demand by service;
+- referral completion;
+- waiting times;
+- missed appointments;
+- chronic-condition service demand;
+- vaccination coverage/follow-up;
+- service pressure;
+- hospital capacity trends;
+- ambulance demand/transfer performance;
+- geographic inequalities;
+- unresolved journeys;
+- population-level care gaps.
+
+Support hierarchical filters:
+
+**National → Province → District → City/Municipality → Facility → Service.**
+
+Use small-cohort suppression and re-identification controls in production design. Population Health Intelligence must never become an unrestricted patient-identification tool.
+
+## 4.12 Governance by Design
+
+Governance is an implementation requirement, not a final documentation chapter.
+
+Required design areas:
+
+- POPIA/privacy-by-design;
+- cybersecurity;
+- data residency;
+- human oversight;
+- clinical safety boundaries;
+- model governance;
+- model monitoring;
+- explainability;
+- prompt-injection protection;
+- comprehensive audit;
+- retention;
+- secure deletion where lawful;
+- encryption in transit;
+- encryption-at-rest architecture;
+- secret management/KMS;
+- backup and disaster recovery;
+- incident response;
+- security monitoring;
+- data-loss-prevention architecture;
+- access recertification;
+- audit integrity/tamper evidence;
+- secure export controls;
+- de-identification controls.
+
+No identifiable health data should be sent to an external AI provider without an approved legal, security and contractual basis.
+
 ---
 
-# 22. AI ACTION ARCHITECTURE
+# 5. PRESERVE THE CURRENT WORKING v0.4 BASELINE
 
-The LLM must never directly manipulate the database.
+Do not regress existing compatible capabilities already built in the repository.
+
+Preserve and improve:
+
+- 120+ clearly synthetic patients;
+- clickable CarePath/Pyrneo home branding;
+- login user-type dropdown;
+- in-app demo user-type switcher;
+- multiple user roles with different access;
+- OneRecord patient pages;
+- referrals and server-side state machine;
+- Appointment Management Centre;
+- standalone and referral-linked bookings;
+- appointment lifecycle: Requested → Booked → Checked In → Completed, plus Cancelled / No Show;
+- hospital bed-capacity management;
+- General, High Care, ICU, Maternity and Paediatric bed types;
+- capacity re-check on bed-dependent referral/booking;
+- alternative facility suggestion when required capacity is unavailable;
+- Care Gaps;
+- Notification Centre;
+- Medication & Vaccine Management Centre;
+- Ambulance Availability & Patient Transfer Management Centre;
+- facility discovery by province/city/type/service;
+- clickable facility detail views;
+- national synthetic facility network across all nine provinces;
+- referral outcomes with explicit non-ranking warning;
+- Health Passport;
+- responsive web UX;
+- interactive Mobile App Preview;
+- Ayanda exit button;
+- Ayanda voice/text controls;
+- administrator-only OpenAI API settings;
+- audit events;
+- CI pipeline.
+
+Where a previously implemented feature is demo-only or synthetic, keep that limitation explicit.
+
+---
+
+# 6. FACILITY DISCOVERY, CAPACITY & ROUTING
+
+Facilities must be searchable and filterable by:
+
+- province;
+- district;
+- city/municipality;
+- facility type;
+- service;
+- free-text search.
+
+Clicking a facility must open a full operational detail view containing, where applicable:
+
+- facility name/type;
+- province/district/city;
+- services;
+- operating/contact information;
+- referral instructions;
+- staffed/occupied/reserved/available beds;
+- appointments;
+- incoming referrals;
+- outgoing referrals;
+- active transfers;
+- ambulance context;
+- synthetic referral outcomes;
+- configured waiting-time indicators;
+- open exceptions;
+- capacity status.
+
+Destination recommendation should consider approved structured data such as:
+
+- requested service;
+- referral pathway;
+- province/district/city;
+- facility type;
+- configured administrative eligibility;
+- available bed type when relevant;
+- configured waiting-time indicator;
+- appointment availability when authoritative;
+- ambulance availability/transfer feasibility when relevant.
+
+A human must confirm the destination before submission.
+
+Raw recovery/mortality percentages must not be used as a simplistic hospital-quality score.
+
+---
+
+# 7. APPOINTMENT MANAGEMENT CENTRE
+
+Support:
+
+- requested;
+- booked;
+- checked-in;
+- completed;
+- cancelled;
+- no-show;
+- standalone bookings;
+- referral-linked bookings;
+- service;
+- facility;
+- clinician/resource where implemented;
+- time/duration;
+- bed requirement;
+- capacity check;
+- appointment notification;
+- appointment reminders;
+- rescheduling;
+- patient cancellation where permitted;
+- audit history.
+
+For bed-dependent admission bookings:
+
+`available beds = staffed beds - occupied beds - reserved beds`.
+
+Book → reserve capacity.  
+Check-in → convert reservation to occupancy.  
+Cancellation → release reservation.  
+Completion/discharge → release occupancy according to workflow.
+
+All demo capacity must be labelled synthetic unless connected to an authorised live source.
+
+---
+
+# 8. AMBULANCE AVAILABILITY & PATIENT TRANSFER MANAGEMENT
+
+Synthetic fleet types:
+
+- Basic;
+- Advanced;
+- ICU/Critical Care;
+- Neonatal.
+
+Fleet state:
+
+`AVAILABLE | DISPATCHED | MAINTENANCE`.
+
+Transfer state machine:
+
+`REQUESTED → ASSIGNED → EN_ROUTE → PATIENT_ON_BOARD → ARRIVED → COMPLETED` with `CANCELLED` where permitted.
+
+Transfer request should include:
+
+- patient;
+- linked referral;
+- pickup facility;
+- destination;
+- priority;
+- required ambulance capability;
+- requested/scheduled time;
+- assigned ambulance;
+- ETA;
+- status;
+- notes;
+- requester;
+- audit trail.
+
+If a linked referral requires admission, destination bed capacity must be rechecked before the transfer is accepted.
+
+Do not claim real-time EMS dispatch unless an authorised source is connected.
+
+---
+
+# 9. MEDICATION, VACCINATION, CARE PLANS, DOCUMENTS & IMAGING
+
+## Medication
+
+Support:
+
+- current/history;
+- status such as Current / On Hold / Stopped;
+- instructions;
+- source;
+- reconciliation;
+- authorised addition/status update;
+- patient read view;
+- provenance.
+
+Ayanda must not prescribe or independently change medication.
+
+## Vaccination
+
+Support:
+
+- vaccine;
+- dose;
+- administered date;
+- administering facility;
+- status;
+- next due date;
+- due/overdue indicators;
+- notifications;
+- care gaps;
+- provenance.
+
+Ayanda must not autonomously determine clinical eligibility.
+
+## Care Plans
+
+Implement CarePlan capability with:
+
+- title/problem;
+- goals;
+- responsible care team;
+- planned actions;
+- monitoring requirements;
+- related medication/referrals;
+- review date;
+- tasks;
+- status;
+- provenance.
+
+## Documents & Imaging
+
+Support:
+
+- discharge summaries;
+- referral letters;
+- specialist reports;
+- laboratory reports;
+- imaging reports;
+- imaging-study references/links;
+- document metadata;
+- source/facility;
+- upload validation;
+- access restrictions;
+- document provenance.
+
+Do not require full DICOM/PACS viewing for the hackathon; demonstrate an integration/reference pattern honestly if a full viewer is not implemented.
+
+---
+
+# 10. IDENTITY, MPI, DUPLICATES & FEDERATED RECORD RESOLUTION
+
+Do not invent a new national patient number.
+
+Implement a CarePath **Master Patient Index abstraction** with synthetic matching for the hackathon and clear future adapters for authoritative identity services.
+
+Patient matching signals may include:
+
+- authoritative identifier;
+- CarePath UUID;
+- source-system identifier;
+- date of birth;
+- verified phone/contact data;
+- verified demographics;
+- source organisation.
+
+Never match on name alone.
+
+Create a duplicate-review workflow:
+
+- potential match detected;
+- evidence displayed;
+- authorised user reviews;
+- link / reject / defer;
+- provenance retained;
+- no destructive silent merge.
+
+---
+
+# 11. HEALTHCARE PROFESSIONAL WORKSPACE, TASKS & COMMUNICATION
+
+Reuse Project Guardian work-item strengths in healthcare language.
+
+Task fields:
+
+- patient;
+- referral/journey;
+- title;
+- owner;
+- assignee;
+- due date;
+- priority;
+- status;
+- facility;
+- notes;
+- comments;
+- attachments;
+- created/updated;
+- audit.
+
+Support:
+
+- My Work;
+- team work queue;
+- reassignment;
+- escalations;
+- hand-off notes;
+- secure internal messages;
+- request-for-information messages;
+- patient-contact tasks;
+- result-review tasks;
+- follow-up tasks;
+- closure tasks.
+
+Do not expose patient information in communication to users outside authorised scope.
+
+---
+
+# 12. CAREPATH WATCH™ — SLA, EXCEPTIONS & EARLY WARNING
+
+Implement a configurable operational rules engine.
+
+Examples:
+
+- `AWAITING_ACCEPTANCE > configured threshold`;
+- `MISSING_REQUIRED_INFORMATION`;
+- `APPOINTMENT_UNCONFIRMED`;
+- `MISSED_APPOINTMENT_NO_FOLLOWUP`;
+- `STALE_REFERRAL`;
+- `MISSING_RETURN_FEEDBACK`;
+- `OVERDUE_FOLLOWUP_TASK`;
+- `CAPACITY_CONSTRAINT`;
+- `TRANSFER_DELAY`;
+- `NO_COMPATIBLE_AMBULANCE`;
+- `VACCINE_FOLLOWUP_OVERDUE`;
+- `REPEATED_DECLINE_OR_REDIRECT`;
+- `DUPLICATE_PATIENT_REVIEW_REQUIRED`;
+- `BREAK_GLASS_REVIEW_REQUIRED`.
+
+Rules must be configurable by scope where appropriate and explainable from stored events/timestamps.
+
+---
+
+# 13. COMMAND CENTRE & POPULATION HEALTH HIERARCHY
+
+Create a shared filter/drill-down model:
+
+`Country → Province → District → City/Municipality → Facility → Service`.
+
+The Command Centre is operational. Population Health Intelligence is aggregate/de-identified strategic intelligence.
+
+Do not expose patient-identifiable information in high-level dashboards unless the user drills into a patient-specific workflow and has appropriate authorisation.
+
+Recommended executive questions Ayanda should support:
+
+- “What changed since yesterday?”
+- “Which province has the most unresolved referrals?”
+- “Which district has the longest referral acknowledgement time?”
+- “Where are bed-capacity constraints increasing?”
+- “How many patient transfers are delayed?”
+- “Which services have the largest appointment backlog?”
+- “Show vaccination follow-up gaps by province.”
+
+Every answer must be grounded in authorised data and identify the scope/time period.
+
+---
+
+# 14. AI ACTION ARCHITECTURE
+
+The LLM must never directly manipulate persistence.
 
 Use:
 
-**User → Ayanda → Intent → Authorised Tool → Schema Validation → RBAC/ABAC → Purpose/Scope Check → Workflow Check → Confirmation Gate → Service Layer → Persistence → Audit Event → User Result.**
+**User → Ayanda → Intent → Grounded Retrieval → Authorised Tool Request → Schema Validation → RBAC/ABAC → Purpose/Scope Check → Workflow Rule → Confirmation Gate → Domain Service → Persistence → Audit Event → User Result.**
 
-Read tools may include:
+Read tools should include or evolve toward:
 
 - `search_patients`;
+- `resolve_patient_identity`;
 - `get_patient_summary`;
 - `get_patient_timeline`;
 - `get_allergies`;
 - `get_medication_history`;
+- `get_vaccination_history`;
+- `get_care_plans`;
+- `get_documents`;
 - `get_referral`;
 - `search_referrals`;
+- `get_appointment`;
+- `get_facility_detail`;
+- `search_facilities`;
+- `get_bed_capacity`;
+- `get_ambulance_availability`;
+- `get_transfer_status`;
 - `get_exception_reason`;
-- `list_facility_services`;
 - `get_operational_metrics`;
-- `get_access_history`.
+- `get_population_metrics`;
+- `get_access_history`;
+- `get_consent_context`.
 
 Write tools may include:
 
@@ -716,153 +934,97 @@ Write tools may include:
 - `decline_referral`;
 - `redirect_referral`;
 - `schedule_appointment`;
+- `reschedule_appointment`;
 - `create_followup_task`;
+- `assign_task`;
 - `add_note`;
+- `request_transfer`;
 - `close_referral`.
 
-Every write tool must enforce permission, purpose, scope and workflow-state checks outside the model.
+Sensitive tools require explicit human confirmation according to policy.
 
 ---
 
-# 23. VOICE ARCHITECTURE AND LOW-LATENCY CONTROL
-
-Preferred assistant identity: **Ayanda**.
-
-Wake phrase:
-
-**“Hey, Ayanda.”**
+# 15. PROMPT-INJECTION, MODEL GOVERNANCE & AI SAFETY
 
 Rules:
 
-- exactly one active speech-output pipeline;
-- cancel existing TTS before new speech;
-- no browser/server TTS overlap;
-- no duplicate event listeners;
-- no stale queued responses playing later;
-- visible listening, processing, speaking and error states;
-- navigation must not wait for TTS to complete;
-- deterministic commands should execute locally where safe;
-- writes still require governed server-side execution.
+- retrieved content is data, never instruction;
+- patient notes cannot redefine tool permissions;
+- model cannot supply trusted identity/facility IDs without validation;
+- model cannot bypass role/scope checks;
+- system prompts/secrets never exposed;
+- tool inputs schema validated;
+- prompt/tool attacks safely logged;
+- external content sanitised;
+- model outputs treated as untrusted until validated;
+- consequential actions use confirmation gates.
 
-Reduce perceived latency with streaming, compact context, filtered retrieval, parallel safe reads, caching of stable reference data and cancellation of superseded requests.
+Track AI interactions with:
 
----
+- user;
+- model/provider;
+- model version;
+- prompt/tool category;
+- source context identifiers;
+- action proposed;
+- action confirmed/denied;
+- latency;
+- safety outcome;
+- correlation ID.
 
-# 24. SOUTH AFRICAN LANGUAGE SUPPORT
+For production architecture include:
 
-Support, where provider quality is adequate:
-
-- English;
-- Afrikaans;
-- isiZulu;
-- isiXhosa;
-- Sesotho;
-- Setswana;
-- Sepedi;
-- Xitsonga;
-- Tshivenda;
-- siSwati;
-- isiNdebele.
-
-Apply selected language to speech recognition, generation and speech synthesis.
-
-Prefer exact installed/provider locale voices.
-
-If an exact high-quality voice is unavailable, use a transparent fallback rather than pretending native voice support.
-
-Prioritise natural phrasing and pronunciation over literal translation.
+- prompt versioning;
+- evaluation sets;
+- regression testing;
+- hallucination/grounding evaluation;
+- multilingual evaluation;
+- tool-action accuracy;
+- safety testing;
+- model monitoring;
+- fallback/kill switch.
 
 ---
 
-# 25. AUTHENTICATION, RBAC AND ABAC
+# 16. AUTHENTICATION, RBAC, ABAC, MFA & SESSION SECURITY
 
-Implement secure authentication and server-side authorisation.
+Seed hackathon roles including:
 
-Use both:
-
-- **RBAC** — what a role can do;
-- **ABAC/context controls** — whether the action is allowed for this patient, facility, organisation, purpose and care relationship.
-
-Example roles:
-
-- System Administrator;
+- Administrator;
 - Referring Clinician;
-- Receiving Clinician/Coordinator;
+- Specialist;
+- Nurse;
+- Care Coordinator;
 - Patient Navigator;
+- Pharmacist;
+- Laboratory Technologist;
 - Facility Manager;
 - District Manager;
 - Provincial/Oversight User;
-- Auditor / Compliance User;
-- Patient/Health Passport User;
-- Read-Only User.
+- Auditor/Compliance;
+- Patient.
 
-Example permissions:
+The user-type dropdown is a hackathon demonstration convenience only. Production architecture must use real authenticated identities and must not permit arbitrary role switching.
 
-- `patient.read`;
-- `patient.clinical_read`;
-- `patient.timeline_read`;
-- `patient.access_history_read`;
-- `referral.create`;
-- `referral.submit`;
-- `referral.accept`;
-- `referral.redirect`;
-- `referral.close`;
-- `appointment.manage`;
-- `task.manage`;
-- `facility.read`;
-- `analytics.read`;
-- `audit.read`;
-- `breakglass.request`;
-- `data.export`;
-- `ai.execute_action`;
-- `ai.execute_sensitive_action`.
+Implement/target:
 
-A receptionist must not see the same information as a treating clinician.
-
-A manager should receive aggregated/de-identified views where patient identity is not required.
+- server-side sessions or token validation;
+- secure cookies where applicable;
+- RBAC;
+- ABAC;
+- object-level authorisation;
+- care-relationship checks;
+- organisation/facility scope;
+- purpose-of-use checks;
+- re-authentication/MFA for Break Glass and other sensitive actions;
+- session expiry/revocation;
+- brute-force/rate limiting;
+- future OIDC/Entra/enterprise identity integration.
 
 ---
 
-# 26. BREAK-GLASS EMERGENCY ACCESS
-
-Design explicit emergency access.
-
-When a permitted clinician needs exceptional access:
-
-1. choose **Break Glass — Emergency Access**;
-2. record the reason;
-3. validate authenticated user and permitted role;
-4. capture facility/organisation context;
-5. grant time-limited minimum-necessary access;
-6. record every sensitive read/action;
-7. create a high-visibility audit event;
-8. make the event reviewable by authorised compliance users.
-
-Break Glass must not silently bypass security.
-
----
-
-# 27. PATIENT ACCESS, CONSENT AND PURPOSE
-
-Design consent/preferences as configurable governance, not as a simplistic universal legal rule.
-
-Support where appropriate:
-
-- care-related access purpose;
-- emergency-access purpose;
-- operational/administrative purpose;
-- patient sharing preferences;
-- temporary sharing workflows;
-- revocation/expiry where applicable;
-- consent/provenance record.
-
-Do not imply that all lawful healthcare processing requires the same consent mechanism.
-
-Prototype documentation must distinguish product design from legal advice.
-
----
-
-# 28. POPIA AND PRIVACY BY DESIGN
+# 17. POPIA, DATA RESIDENCY, PRIVACY & SECURITY
 
 Treat health information as highly sensitive/special personal information.
 
@@ -872,423 +1034,456 @@ Apply:
 - purpose limitation;
 - data minimisation;
 - least privilege;
-- RBAC/ABAC;
-- organisation/facility scope;
-- confidentiality;
+- secure defaults;
+- organisation/facility isolation;
+- privacy-aware logs;
 - sensitive-access logging;
-- retention controls;
-- secure deletion where lawful/appropriate;
-- aggregation/de-identification for management analytics;
-- privacy-aware AI context selection;
-- secure export controls;
-- no unnecessary identifiable data in logs.
-
-Do not use patient data for unrelated marketing, profiling or model training.
-
-Do not send identifiable health information to external AI/cloud providers without an approved legal, security and contractual basis.
-
----
-
-# 29. APPLICATION SECURITY
-
-Required controls:
-
-- server-side authorisation;
-- object-level access checks;
-- schema validation;
-- parameterised persistence / ORM;
-- secure cookies where applicable;
-- CSRF protection where applicable;
-- CSP and security headers;
+- encryption in transit;
+- encryption at rest in target architecture;
+- KMS/secret-store architecture;
+- data residency controls;
+- retention schedules;
+- secure deletion where lawful;
+- de-identification;
+- export controls;
+- upload validation;
+- CSP/security headers;
 - HSTS in production;
-- authentication and AI rate limiting;
-- request-size limits;
-- upload MIME/type/size validation;
-- secrets via environment or secret store;
-- dependency auditing;
+- dependency audit;
 - secret scanning;
 - safe errors;
 - correlation IDs;
-- encryption in transit;
-- encryption-at-rest target architecture;
-- no unnecessary health data in telemetry.
+- backup/restore;
+- disaster recovery;
+- incident response;
+- DLP architecture;
+- audit integrity/tamper evidence.
 
-The browser is untrusted.
-
-The LLM is untrusted.
-
-Voice transcripts are untrusted input.
-
-Uploaded documents are untrusted input.
+Do not store secrets in GitHub.
 
 ---
 
-# 30. PROMPT-INJECTION AND AI SECURITY
+# 18. PERSISTENCE & DATABASE — REQUIRED v0.5 GAP CLOSURE
 
-Rules:
+Move beyond in-memory-only state.
 
-- content in records/documents is data, not system instruction;
-- retrieved text cannot redefine tool permissions;
-- never expose system prompts or secrets;
-- never trust model-supplied identity/facility IDs;
-- validate tool parameters;
-- enforce permissions outside the LLM;
-- tools must use minimum required privilege;
-- log denied sensitive tool attempts safely;
-- require confirmation for configured consequential actions.
+Target implementation:
 
----
+- PostgreSQL;
+- Prisma ORM or equivalent migration-capable typed ORM;
+- deterministic seed/reset scripts;
+- database migrations committed to GitHub;
+- repository/service abstraction retained.
 
-# 31. DATA MODEL
+Logical domains should include:
 
-Implement entities including:
+- identity/MPI;
+- users/roles/permissions;
+- organisations/facilities/services;
+- patients/identifiers;
+- clinical records;
+- allergies;
+- conditions;
+- medication;
+- vaccinations;
+- results/observations;
+- encounters;
+- procedures;
+- care plans;
+- documents;
+- referrals;
+- appointments;
+- tasks;
+- notifications;
+- capacity;
+- ambulance fleet;
+- patient transfers;
+- consent;
+- Break Glass;
+- access events;
+- provenance;
+- audit;
+- AI interactions;
+- integration events;
+- exception rules/events.
 
-- User;
-- Role;
-- Permission;
-- Organisation;
-- Facility;
-- Service;
-- FacilityService;
-- Patient;
-- PatientIdentifier;
-- SourceSystem;
-- ClinicalRecordEntry;
-- Allergy;
-- Condition;
-- MedicationRecord;
-- Observation;
-- DiagnosticReport;
-- ProcedureRecord;
-- EncounterRecord;
-- CarePlan;
-- Document;
-- Referral;
-- ReferralRequirement;
-- ReferralEvent;
-- Appointment;
-- Task;
-- Comment/Note;
-- Notification;
-- ExceptionRule;
-- JourneyException;
-- ConsentRecord;
-- BreakGlassEvent;
-- AccessEvent;
-- AuditEvent;
-- ProvenanceRecord;
-- AIInteraction;
-- SecurityEvent;
-- SystemEvent.
+Use UUIDs internally and UTC timestamps.
 
-Use UUID internal identifiers.
-
-Store timestamps in UTC and render in local user context.
-
-Index common status, patient, facility, service, date and timeline fields.
+CarePath persistence should store CarePath-owned workflows, indexes, metadata, provenance and authorised replicated/cached data. Do not assume CarePath becomes the authoritative owner of every external clinical record.
 
 ---
 
-# 32. DATA PROVENANCE AND CONFLICT HANDLING
+# 19. INTEROPERABILITY DEMONSTRATOR — REQUIRED v0.5 GAP CLOSURE
 
-Never silently merge contradictory clinical facts.
+For hackathon credibility, implement a demonstrable interoperability gateway with at least:
 
-When multiple sources disagree:
+- health endpoint;
+- mock FHIR-style Patient retrieval;
+- mock ServiceRequest/referral endpoint;
+- mock Appointment endpoint;
+- mock Observation/DiagnosticReport example;
+- provenance/audit example;
+- source-system adapter abstraction.
 
-- preserve each source record;
-- show source and timestamp;
-- expose current/superseded/corrected status where available;
-- allow authorised clinical reconciliation workflows;
-- record reconciliation as a new provenance event;
-- never let the LLM invent which fact is clinically correct.
+Demonstrate one synthetic patient assembled from multiple mock sources, for example:
 
----
+**Clinic EMR + Lab + Pharmacy + Specialist system → CarePath Exchange → OneRecord.**
 
-# 33. ANALYTICS AND EXECUTIVE BRIEFING
-
-Operational metrics may include:
-
-- referral volume;
-- open referrals;
-- awaiting acceptance;
-- acknowledgement time;
-- scheduling time;
-- completion rate;
-- stale referral count;
-- missed appointments;
-- feedback completion;
-- follow-up completion;
-- volume by facility/service;
-- exception counts;
-- access/audit anomalies;
-- task completion.
-
-For management views, prefer aggregated or appropriately de-identified data.
-
-Add grounded briefing questions such as:
-
-- “What changed since yesterday?”
-- “Which queues deteriorated this week?”
-- “Which facilities have the most stale referrals?”
-- “What needs management attention today?”
-
-Do not claim improved clinical outcomes, mortality, waiting-time reduction or financial savings unless measured and validated.
+Label every mock integration clearly.
 
 ---
 
-# 34. FRONT-END ENGINEERING
+# 20. NOTIFICATION CENTRE
 
-Build reusable components for:
+Support role-aware notifications for:
+
+- referral submitted/received/accepted/declined/redirected;
+- appointment booked/rescheduled/cancelled/reminder;
+- capacity constraint;
+- transfer requested/assigned/en route/onboard/arrived/completed;
+- no compatible ambulance;
+- medication reconciliation action;
+- vaccination due/overdue;
+- task assigned/overdue;
+- Break Glass event/review;
+- system/security alerts where appropriate.
+
+Provide:
+
+- unread badge;
+- filtering;
+- mark read;
+- mark all read;
+- patient/facility/role scope;
+- minimum-necessary message content;
+- adapter abstraction for in-app/SMS/WhatsApp/email.
+
+Hackathon delivery may simulate external delivery.
+
+---
+
+# 21. MOBILE EXPERIENCE
+
+The responsive web application must function well on desktop, tablet and mobile.
+
+Retain an explicit **Mobile App Preview** showing patient and clinician modes.
+
+Patient mobile concepts:
+
+- Health Passport;
+- appointments;
+- medication;
+- vaccines;
+- notifications;
+- referrals;
+- transfer status;
+- consent/access history;
+- Ayanda.
+
+Clinician mobile concepts:
+
+- My Work;
+- authorised OneRecord context;
+- appointments;
+- referral queue;
+- notifications;
+- capacity/transfer context;
+- tasks;
+- Ayanda.
+
+Do not claim a native mobile app has been published unless actually released.
+
+---
+
+# 22. FRONT-END ENGINEERING
+
+Use reusable components and avoid oversized single-file implementations.
+
+Required/evolving components:
 
 - AppShell;
-- navigation;
+- RoleAwareNavigation;
 - CommandCentre;
+- GeographicScopeSelector;
+- ProfessionalWorkspace;
 - PatientSearch;
-- OneRecordSummary;
-- ClinicalAlertPanel;
-- MedicationPanel;
+- OneRecord;
+- CriticalAlerts;
 - AllergyPanel;
-- ConditionsPanel;
+- MedicationPanel;
+- VaccinePanel;
+- ConditionPanel;
 - ResultsPanel;
+- ImagingPanel;
+- CarePlanPanel;
+- DocumentPanel;
 - PatientTimeline;
 - ProvenanceDrawer;
-- AccessHistoryPanel;
-- HealthPassport;
-- ReferralTable / ReferralCards;
-- ReferralStatusBadge;
+- ConsentPanel;
+- AccessHistory;
+- EmergencyAccessModal;
+- MPI/DuplicateReview;
+- ReferralWorkspace;
 - JourneyTimeline;
-- AppointmentPanel;
-- TaskList;
-- ExceptionPanel;
-- FacilityServiceSelector;
-- ActivityFeed;
+- AppointmentManagementCentre;
+- TaskWorklist;
+- CarePathWatchPanel;
+- FacilityExplorer;
+- FacilityDetail;
+- CapacityPanel;
+- AmbulanceTransferCentre;
+- NotificationCentre;
+- HealthPassport;
+- PopulationHealth;
 - AuditTimeline;
 - AyandaLauncher;
 - AyandaPanel;
 - VoiceControls;
 - LanguageSelector;
 - ConfirmActionModal;
-- BreakGlassModal;
-- LoadingState;
-- EmptyState;
-- ErrorState;
-- PermissionDeniedState;
-- mobile navigation.
+- MobilePreview;
+- Loading/Empty/Error/PermissionDenied states.
 
-Every screen must include loading, empty, error and permission-denied states where applicable.
+Design rules:
+
+- no text overlap;
+- no content overflow;
+- no diagram lines through circles/labels;
+- aligned imagery;
+- consistent grid;
+- restrained healthcare status colours;
+- touch-friendly controls;
+- responsive tables/forms;
+- constrained content width;
+- approved Pyrneo/CarePath assets only.
 
 ---
 
-# 35. BACK-END ENGINEERING
+# 23. BACK-END ENGINEERING
 
 Separate:
 
 - routes/controllers;
 - authentication;
-- RBAC/ABAC authorisation;
+- RBAC/ABAC;
 - validation;
-- patient-record services;
-- referral/journey services;
-- repository/data access;
+- patient identity/MPI;
+- OneRecord assembly;
+- clinical-record service;
+- referral/journey service;
+- appointment service;
+- task service;
+- capacity service;
+- ambulance/transfer service;
+- medication/vaccine service;
+- care-plan/document service;
+- consent service;
+- Break Glass service;
+- notification service;
 - provenance service;
-- audit/access-log service;
+- audit/access service;
+- exception/early-warning engine;
+- analytics/population service;
 - AI tool gateway;
-- notification adapters;
-- interoperability adapters;
-- exception engine;
-- analytics service;
-- consent/break-glass services.
+- interoperability gateway/adapters;
+- persistence repositories.
 
-Critical rules belong server-side.
+Critical rules live server-side.
 
 ---
 
-# 36. PERSISTENCE STRATEGY
+# 24. SYNTHETIC DEMO DATA
 
-Target:
+Maintain at least **120 synthetic patients**.
 
-- PostgreSQL;
-- Prisma ORM or equivalent typed migration-capable ORM.
-
-An in-memory/seed-backed first scaffold is acceptable only behind repository interfaces with deterministic reset behaviour and a clear path to PostgreSQL.
-
-Never falsely claim production persistence.
-
----
-
-# 37. SYNTHETIC DEMO DATA
-
-Use synthetic patient data only for the hackathon unless authorised verified data is later connected.
+Seed all nine provinces and a representative set of cities/districts/facility types.
 
 Seed:
 
-- public and private synthetic facilities;
-- multiple services;
+- public/private hospitals;
+- clinics/CHCs;
+- laboratories;
+- pharmacies;
+- services;
 - users/roles;
-- at least 10–15 synthetic patients;
-- one rich longitudinal patient record;
+- patients;
+- duplicate identity scenario;
+- emergency-access scenario;
 - allergies;
+- conditions;
 - medication;
-- diagnoses/conditions;
-- synthetic laboratory results;
+- vaccinations;
+- laboratory results;
+- imaging report/reference;
 - encounters;
+- procedures;
+- care plans;
+- documents;
 - referrals;
 - appointments;
+- bed capacity;
+- ambulance fleet;
+- transfers;
+- notifications;
 - tasks;
 - comments;
-- exceptions;
-- access history;
-- audit events.
+- care gaps;
+- audit/access events;
+- consent records;
+- Break Glass events;
+- mock integration/provenance events.
 
-Primary demo patient:
-
-- **Thandi Mokoena**;
-- synthetic identifier such as `SYN-CP-0001`;
-- preferred language: isiZulu;
-- documented synthetic penicillin allergy;
-- synthetic hypertension history;
-- current synthetic medication entry;
-- prior referral history;
-- new cardiology referral scenario.
-
-All values must be clearly fabricated demo data.
+Primary demo patient remains **Thandi Mokoena**, clearly synthetic.
 
 ---
 
-# 38. FLAGSHIP 90-SECOND DEMO FLOW
+# 25. FLAGSHIP HACKATHON DEMO — ONE PATIENT, END TO END
 
-The complete product must reliably support:
+The strongest demo is not a dashboard tour. It follows one patient through CarePath.
 
-1. User signs in as an authorised clinician.
-2. Command Centre loads synthetic operational data.
-3. Presenter says: **“Hey Ayanda, open Thandi Mokoena.”**
-4. Ayanda retrieves the synthetic OneRecord view.
-5. Presenter asks: **“Summarise the relevant history and show documented allergies.”**
-6. Ayanda shows the synthetic allergy, medication, condition and provenance.
-7. Presenter says: **“Create a referral to an appropriate cardiology service.”**
-8. Ayanda creates a **draft only** and shows configured destination options with explanation.
-9. User confirms destination.
-10. Ayanda summarises the referral and requests explicit submission confirmation.
-11. Referral becomes `SUBMITTED` and appears in the receiving queue.
-12. Receiving Coordinator accepts and schedules it.
-13. System creates a simulated patient notification.
-14. Presenter asks: **“Show referrals waiting more than 24 hours.”**
-15. A stale synthetic referral is flagged.
-16. Ayanda explains why the exception fired.
-17. Presenter asks Ayanda to create a follow-up task.
-18. Ayanda requests confirmation.
-19. Governed API creates the task.
-20. Audit trail records the AI/voice-assisted action.
-21. Presenter opens access/audit history.
-22. Closing message: **“One Patient. One Journey. One Trusted Health Record.”**
+Required reliable flow:
 
-The demo must visibly show that CarePath is more than a chatbot and more than a dashboard.
+1. Sign in as an authorised clinic clinician.
+2. Search Thandi Mokoena.
+3. CarePath resolves the synthetic longitudinal identity.
+4. Open OneRecord.
+5. Show allergy, condition, medication, result and provenance from more than one mock source.
+6. Ask Ayanda: **“Summarise the relevant history and show the documented allergy.”**
+7. Create a cardiology referral.
+8. CarePath suggests facilities using service, geography, configured waiting/capacity rules and explains the recommendation basis.
+9. Clinician confirms the destination.
+10. Submit referral.
+11. Receiving coordinator receives and accepts it.
+12. Appointment Management Centre schedules the patient.
+13. If admission/transfer is required, show bed-capacity and ambulance availability checks.
+14. Patient receives a simulated notification and multilingual Ayanda guidance.
+15. Command Centre shows the journey as active and SLA-visible.
+16. Specialist opens the patient record and records a synthetic specialist outcome/feedback.
+17. Referral closes through the closed-loop workflow.
+18. Referring clinician receives closure/feedback.
+19. Patient portal reflects updated journey information.
+20. Auditor opens the complete attributable audit/provenance trail.
+21. Close with: **“The patient remained digitally visible throughout the healthcare journey.”**
 
----
+Optional second micro-demo:
 
-# 39. MICROSOFT / AZURE TARGET ARCHITECTURE
-
-Keep cloud portable while documenting a credible Microsoft-aligned target.
-
-Potential future components:
-
-- Microsoft Entra ID;
-- Azure App Service or Azure Container Apps;
-- Azure Database for PostgreSQL;
-- Azure Key Vault;
-- Azure OpenAI or another approved LLM service;
-- Azure AI Speech where language/voice quality is adequate;
-- Azure Monitor / Application Insights;
-- Azure Storage;
-- Azure API Management;
-- Azure Health Data Services / FHIR service where appropriate and available;
-- private networking.
-
-Do not claim these are deployed until actually deployed.
+- emergency clinician uses audited Break Glass to see critical information for an unconscious synthetic patient.
 
 ---
 
-# 40. REPOSITORY ARCHITECTURE
+# 26. IMPLEMENTATION PRIORITY — v0.5 GAP-CLOSURE ORDER
 
-Use a modular monorepo:
+## P0 — Preserve stability
 
-```text
-carepath-ai/
-├─ apps/
-│  ├─ web/
-│  └─ api/
-├─ packages/
-│  ├─ domain/
-│  ├─ contracts/
-│  ├─ interoperability/
-│  └─ ui/
-├─ assets/
-│  ├─ branding/
-│  └─ demo/
-├─ docs/
-│  ├─ prompts/
-│  ├─ architecture/
-│  ├─ security/
-│  ├─ governance/
-│  ├─ interoperability/
-│  ├─ ux/
-│  ├─ demo/
-│  └─ release/
-├─ infrastructure/
-├─ scripts/
-├─ presentations/
-├─ .github/workflows/
-├─ .env.example
-├─ package.json
-└─ README.md
-```
+- inspect current v0.4;
+- preserve working modules;
+- eliminate dead code/duplicate components;
+- CI green.
 
-Do not place all front-end or API logic into oversized single files.
+## P1 — Persistent database
+
+- PostgreSQL;
+- ORM/migrations;
+- seed/reset;
+- migrate existing synthetic state.
+
+## P2 — Emergency Access / Break Glass
+
+- UI;
+- server policy;
+- re-auth/MFA pattern;
+- emergency summary;
+- expiry;
+- audit/review.
+
+## P3 — Consent & Identity Centre
+
+- MPI abstraction;
+- source identifiers;
+- duplicate review;
+- consent/preferences;
+- proxy/caregiver architecture;
+- access context.
+
+## P4 — Healthcare Professional Workspace
+
+- My Work;
+- tasks;
+- messages;
+- hand-offs;
+- results review;
+- escalations.
+
+## P5 — Care Plans, Documents & Imaging
+
+- care plans;
+- discharge/specialist docs;
+- imaging report/reference;
+- provenance.
+
+## P6 — SLA / CarePath Watch
+
+- configurable thresholds;
+- escalation policies;
+- explainable alerts;
+- resolution workflows.
+
+## P7 — Hierarchical Command Centre
+
+- National → Province → District → City → Facility → Service;
+- operational metrics;
+- drill-down;
+- de-identification.
+
+## P8 — Population Health Intelligence
+
+- aggregate/de-identified trends;
+- geographic/service filters;
+- safe exports.
+
+## P9 — Interoperability Gateway
+
+- demonstrable mock FHIR/API endpoints;
+- multi-source OneRecord assembly;
+- adapter contracts.
+
+## P10 — Ayanda expansion
+
+- new tools;
+- grounding;
+- professional workspace actions;
+- emergency/consent restrictions;
+- population queries;
+- improved multilingual voice.
+
+## P11 — Governance hardening
+
+- encryption/key design;
+- audit integrity;
+- data residency;
+- retention;
+- backup/DR;
+- incident response;
+- model monitoring.
+
+## P12 — Deployment and hackathon hardening
+
+- deploy exact current main commit;
+- verify live version;
+- smoke test live site;
+- deterministic demo reset;
+- one-patient script;
+- update pitch deck;
+- record known limitations.
 
 ---
 
-# 41. ACCESSIBILITY, PERFORMANCE AND OBSERVABILITY
+# 27. TEST STRATEGY
 
-Accessibility:
-
-- semantic HTML;
-- keyboard navigation;
-- visible focus;
-- sufficient contrast;
-- labelled forms;
-- screen-reader-aware controls;
-- no colour-only status meaning;
-- touch-friendly controls.
-
-Performance:
-
-- fast initial shell;
-- deterministic navigation under ~500 ms where possible;
-- parallel safe dashboard reads;
-- streamed AI text where supported;
-- quick speech start;
-- indexed common queries;
-- measure rather than claim.
-
-Observability:
-
-- structured logs;
-- correlation IDs;
-- request duration;
-- AI/tool latency;
-- error categories;
-- audit outcome;
-- health endpoint;
-- no full patient objects in logs by default.
-
----
-
-# 42. CI/CD AND TEST STRATEGY
-
-GitHub Actions should cover:
+GitHub Actions should run:
 
 - install;
-- lint;
+- lint where configured;
 - typecheck;
 - unit tests;
 - API/integration tests;
@@ -1296,320 +1491,347 @@ GitHub Actions should cover:
 - dependency audit;
 - secret scanning where feasible.
 
-Tests must cover at least:
+Required test areas:
 
-## Domain
-- valid/invalid referral transitions;
-- exception thresholds;
+## Identity/access
+
+- unauthenticated denied;
+- RBAC;
+- ABAC;
+- cross-patient/cross-facility ID guessing denied;
+- demo role switching cannot become production auth;
+- duplicate-patient workflow;
+- Break Glass access/expiry/audit;
+- consent/access context.
+
+## OneRecord
+
+- longitudinal assembly;
 - provenance preservation;
-- patient-record retrieval by scope;
-- task assignment;
-- analytics calculations.
+- multi-source record;
+- contradictory fact preservation;
+- care plan/document access.
 
-## Security
-- unauthenticated access rejected;
-- cross-facility/organisation access rejected;
-- RBAC/ABAC enforced;
-- Break Glass audited;
-- invalid tool arguments rejected;
-- sensitive actions require confirmation.
+## Journey
 
-## API
-- patient summary;
-- patient timeline;
-- referral draft;
-- submission;
-- acceptance;
-- appointment scheduling;
-- follow-up task;
-- activity/audit query.
+- valid/invalid referral transitions;
+- SLA clocks;
+- closed-loop feedback;
+- appointment lifecycle;
+- capacity check;
+- transfer workflow.
 
-## UI smoke
+## Early warning
+
+- threshold triggers;
+- no duplicate alerts;
+- resolution;
+- explanation.
+
+## Interoperability
+
+- mock FHIR/API responses;
+- source mapping;
+- provenance;
+- invalid payload rejection.
+
+## Ayanda
+
+- grounded answers;
+- permission denial;
+- confirmation gates;
+- prompt-injection resistance;
+- no direct database action;
+- one TTS pipeline;
+- language propagation;
+- cancel stale output.
+
+## UI
+
 - login;
-- Command Centre;
+- role navigation;
 - OneRecord;
-- Referral Journey;
-- Health Passport preview;
-- Ayanda;
-- responsive layout.
+- Professional Workspace;
+- Command Centre hierarchy;
+- Emergency Access;
+- Consent/Identity;
+- Appointments;
+- Facilities;
+- Transfers;
+- Notifications;
+- Population Health;
+- mobile/tablet responsiveness.
 
-## Voice
-- one controller only;
-- previous TTS cancelled;
-- command mapping;
-- confirmation path.
-
-Never claim penetration testing, production certification or clinical validation unless actually completed.
+Never claim penetration testing, clinical validation, production certification or interoperability certification unless actually completed.
 
 ---
 
-# 43. DOCUMENTATION REQUIREMENTS
+# 28. OBSERVABILITY & OPERATIONS
+
+Implement/target:
+
+- structured logs;
+- correlation IDs;
+- request latency;
+- API error rate;
+- AI latency;
+- tool-action latency;
+- integration-adapter latency/errors;
+- DB health;
+- audit outcome;
+- security events;
+- health endpoint;
+- deploy version/commit visibility;
+- no full patient object logs by default.
+
+The live application should expose its release/version/commit in an admin or health endpoint so the team can verify that Render is running the intended GitHub commit.
+
+---
+
+# 29. DEPLOYMENT TRUTH & RELEASE CONTROL
+
+The repository is the source of truth.
+
+Deployment requirements:
+
+- Render or approved target builds from `main`;
+- verify the deployed commit SHA;
+- do not assume auto-deploy succeeded;
+- smoke test login, Command Centre, patient record, referral, appointments, Ayanda and facility pages after deployment;
+- record release notes;
+- provide rollback path;
+- do not claim a new feature is live until the deployed release actually contains it.
+
+Longer-term Azure-aligned target may include Entra ID, Azure Database for PostgreSQL, Key Vault, Azure OpenAI/approved LLM, Azure AI Speech where adequate, Monitor/Application Insights, Storage, API Management, private networking and suitable FHIR services. Do not claim Azure deployment unless actually performed.
+
+---
+
+# 30. DOCUMENTATION REQUIREMENTS
 
 Maintain:
 
 - README / quick start;
 - architecture;
-- OneRecord design;
+- OneRecord/federated-record design;
+- MPI/identity design;
 - data model;
+- database migrations;
 - interoperability/FHIR mappings;
+- consent model;
+- Break Glass design;
+- RBAC/ABAC;
 - security;
 - POPIA/privacy;
+- data residency;
+- governance;
 - Responsible AI;
-- RBAC/ABAC model;
-- Break Glass design;
-- provenance model;
+- model monitoring/evaluation;
+- provenance;
+- professional workspace/tasks;
+- CarePath Watch rules;
 - Ayanda tools;
 - voice architecture;
-- language support/fallbacks;
-- demo guide;
-- seeded accounts;
+- languages/fallbacks;
+- patient portal;
+- population-health rules;
 - deployment;
 - environment variables;
+- seed/reset;
+- demo guide;
+- demo accounts;
 - release notes;
 - known limitations;
-- integration seams;
-- reset/seed procedure.
+- integration seams.
 
-Documentation must describe reality, not aspiration, when a feature is labelled complete.
+Documentation must distinguish implemented reality from future architecture.
 
 ---
 
-# 44. PROTOTYPE AND CLAIMS BOUNDARY
+# 31. PROTOTYPE CLAIMS BOUNDARY
 
 The hackathon build must clearly state where appropriate:
 
 - synthetic data is used;
+- synthetic capacity and ambulance availability are not live feeds;
 - this is a prototype;
-- no live national/public/private healthcare integration is claimed unless implemented;
+- no live national/public/private integration is claimed unless implemented;
 - no government endorsement is claimed;
 - no clinical validation is claimed;
 - no SAHPRA approval is claimed;
 - no autonomous diagnosis/treatment is performed;
-- interoperability is standards-aware/FHIR-compatible by architecture unless formal conformance testing is completed;
-- configured facility availability is not live capacity data;
-- demo patient records are fabricated.
+- interoperability is FHIR-compatible/standards-aware by architecture unless formally tested;
+- observed referral outcomes are not risk-adjusted hospital rankings;
+- a mobile preview is not a published native app;
+- configured AI language/voice support is assistive unless clinically validated.
 
 ---
 
-# 45. IMPLEMENTATION PRIORITY
+# 32. HACKATHON DEFINITION OF DONE — v0.5
 
-## P0 — Build integrity
-- workspace setup;
-- application boot;
-- API health;
-- environment template;
-- CI build.
-
-## P1 — Secure application shell
-- login;
-- sessions;
-- RBAC/ABAC foundations;
-- Pyrneo/CarePath responsive shell;
-- navigation;
-- demo roles.
-
-## P2 — OneRecord foundation
-- synthetic patient registry;
-- patient identifiers;
-- clinical record entries;
-- provenance;
-- patient timeline;
-- allergies, medication, conditions and results.
-
-## P3 — Exchange foundation
-- FHIR-compatible mappings;
-- mock public/private source adapters;
-- source provenance;
-- no fake live integration.
-
-## P4 — Journey/referral core
-- facilities/services;
-- referrals;
-- state machine;
-- appointments;
-- tasks;
-- timeline.
-
-## P5 — Command Centre and exceptions
-- KPIs;
-- queues;
-- recent activity;
-- stale/missed/follow-up exceptions.
-
-## P6 — Ayanda text assistant
-- record retrieval;
-- grounded answers;
-- navigation;
-- tool gateway;
-- confirmation gates.
-
-## P7 — Voice and languages
-- one controller;
-- wake phrase;
-- STT/TTS abstraction;
-- South African language selection;
-- duplicate-voice prevention;
-- low latency.
-
-## P8 — Health Passport
-- patient-facing summary;
-- referrals/appointments;
-- access history;
-- privacy-aware presentation.
-
-## P9 — Governance hardening
-- audit/access logs;
-- Break Glass;
-- privacy controls;
-- rate limits;
-- headers;
-- security tests.
-
-## P10 — Demo hardening
-- deterministic reset;
-- 90-second story;
-- responsive QA;
-- release notes;
-- fallback path.
-
----
-
-# 46. DEFINITION OF DONE — HACKATHON MVP
-
-Do not call CarePath hackathon-ready until:
+Do not call the target build complete until:
 
 - application starts from documented commands;
-- login works;
-- at least five role types are seeded;
-- Command Centre shows real seed-derived values;
-- OneRecord works for synthetic patients;
-- critical clinical facts display provenance;
-- at least one mock external source contributes to a synthetic longitudinal record;
-- referrals can be created and updated;
-- referral state transitions persist;
-- invalid transitions are blocked;
-- patient journey timeline works;
-- facility/service directory works;
-- appointment workflow works;
-- tasks/follow-ups work;
-- recent activity populates;
-- exception engine works;
-- Health Passport preview works;
-- Ayanda works across pages;
-- Ayanda answers grounded patient/referral questions;
-- Ayanda can perform at least one governed write action after confirmation;
-- voice input works or has a documented fallback;
+- persistent database works or the release is explicitly labelled as still using in-memory fallback;
+- at least 120 synthetic patients load;
+- all seeded roles authenticate;
+- role-specific workspace/navigation works;
+- OneRecord shows provenance;
+- multiple mock source systems contribute to at least one longitudinal record;
+- care plans/documents are visible;
+- referral state machine works;
+- SLA/exception engine works;
+- appointment lifecycle works;
+- capacity validation works;
+- ambulance transfer workflow works;
+- facility province/city filtering and detail views work;
+- Notification Centre works;
+- medication/vaccine management works;
+- Emergency Break Glass demonstrator works and is audited;
+- Consent & Identity/MPI demonstrator works;
+- Command Centre supports hierarchical scope;
+- Population Health module works with aggregate/de-identified demo metrics;
+- mock interoperability/FHIR gateway works;
+- Health Passport works;
+- professional task workspace works;
+- Ayanda works across modules;
+- at least one governed Ayanda write executes after confirmation;
 - duplicate voice is prevented;
-- selected language propagates correctly;
-- access and audit logs record AI/voice-assisted actions;
-- Break Glass has a demonstrable audited prototype path;
 - mobile/tablet layout is usable;
+- no text overlap/overflow exists;
 - no secrets are committed;
-- synthetic data is labelled;
 - CI passes;
-- core tests pass;
+- deployed commit is verified;
+- live smoke tests pass;
 - demo reset works;
 - README reflects reality;
-- no unsupported clinical, integration or deployment claims remain.
+- one-patient end-to-end demo succeeds;
+- no unsupported clinical/integration/deployment claims remain.
 
 ---
 
-# 47. FINAL VALIDATION CHECKLIST
+# 33. FINAL VALIDATION CHECKLIST
 
 ## Functional
-- every menu link resolves;
+
+- every menu item resolves;
 - every visible action works;
 - forms validate;
 - filters work;
+- province/city facility selection works;
+- facility detail works;
 - OneRecord chronology works;
-- provenance opens correctly;
-- referral journey updates after mutation;
-- recent activity updates;
-- audit/access events update;
-- demo flow runs end-to-end.
+- provenance works;
+- professional work queues work;
+- referral journey updates;
+- appointments update;
+- transfers update;
+- notifications update;
+- care plans/documents render;
+- Break Glass works;
+- consent/identity workflow works;
+- population filters work;
+- demo flow runs end to end.
 
 ## Security
-- unauthenticated access blocked;
+
+- unauthenticated blocked;
 - RBAC/ABAC enforced;
-- cross-scope ID guessing blocked;
+- scope guessing blocked;
+- MFA/re-auth pattern exists for sensitive actions;
 - AI cannot bypass permissions;
 - sensitive actions require confirmation;
-- Break Glass is explicit and audited;
+- Break Glass explicit/time-limited/audited;
+- consent/access scope respected;
 - secrets absent;
-- logs avoid unnecessary patient data.
+- logs minimise patient data;
+- audit trail attributable.
 
-## Voice
-- one voice only;
-- one assistant identity;
-- no stale playback;
-- selected language honoured where available;
-- fallback transparent.
+## Voice/AI
+
+- one assistant;
+- one TTS pipeline;
+- no stale duplicate playback;
+- selected language propagated where supported;
+- fallback transparent;
+- grounded answers distinguished from suggestions;
+- tool actions validated;
+- prompt injection cannot redefine authority.
 
 ## UX
+
 - desktop/laptop/tablet/mobile checked;
-- no text overflow;
-- no overlapping components;
-- no connector lines crossing diagram nodes;
-- images aligned to the design grid;
-- no edge-to-edge stretching defect except intentionally full-width hero imagery;
-- loading/error/empty states exist;
-- status colours have text/icon meaning.
+- no overlap;
+- no card overflow;
+- no diagram lines through nodes;
+- images aligned;
+- consistent professional layout;
+- accessible focus/labels;
+- loading/error/empty/permission states present.
 
 ## Claims
-- no live integration claimed unless live;
-- no production deployment claimed unless deployed;
-- no clinical validation claimed unless validated;
-- no fabricated benefits/statistics;
-- no autonomous diagnosis/treatment language.
+
+- no fake live data;
+- no fake approval;
+- no fake clinical validation;
+- no fake integration;
+- no fake production deployment;
+- no raw outcome ranking presented as hospital quality.
 
 ---
 
-# 48. ENGINEERING DELIVERY RULES
+# 34. ENGINEERING DELIVERY RULES
 
-1. Build the working product, not only mockups.
-2. Preserve stable functionality where compatible.
-3. Do not create duplicate implementations.
-4. Fix root causes, not surface symptoms.
-5. Store all source and documentation in GitHub.
+1. Build working product features, not decorative placeholders.
+2. Preserve compatible stable functionality.
+3. Fix root causes.
+4. Keep one coherent architecture.
+5. Store everything in GitHub.
 6. Commit meaningful incremental changes.
 7. Do not commit secrets.
-8. Keep demo state deterministic and resettable.
-9. Use synthetic data.
-10. Make material actions auditable.
+8. Keep demo state deterministic/resettable.
+9. Use synthetic data unless authorised real data is explicitly connected.
+10. Make material reads/actions attributable where required.
 11. Preserve provenance.
 12. Keep human accountability explicit.
 13. Optimise latency without weakening governance.
-14. Test before declaring complete.
-15. Document limitations precisely.
-16. Preserve a clean path from hackathon prototype to enterprise architecture.
-17. Never replace approved Pyrneo branding with fabricated logos.
-18. Never silently reconcile contradictory clinical records using AI.
+14. Validate every write server-side.
+15. Test before declaring complete.
+16. Document limitations precisely.
+17. Maintain a clean path from hackathon prototype to enterprise architecture.
+18. Use approved Pyrneo/CarePath branding only.
+19. Never silently reconcile conflicting clinical records using AI.
+20. Never equate raw outcome percentages with hospital quality.
+21. Never deploy an unverified commit and call it current.
+22. Never make the AI the clinical authority.
 
 ---
 
-# 49. SUCCESS CRITERION
+# 35. SUCCESS CRITERION
 
-A judge should understand within minutes that CarePath AI is not merely a chatbot, not merely a referral tracker and not merely another EMR.
+A judge should understand within minutes that CarePath AI is not merely a chatbot, not merely a dashboard, not merely a referral tracker and not another isolated EMR.
 
-It is a governed digital-health operating layer in which:
+It is a governed federated digital-health operating layer in which:
 
-- one patient can have one coherent longitudinal health view;
-- public and private healthcare systems can be connected through standards-aware adapters;
-- provenance and access history remain visible;
-- referrals move through accountable states;
-- lost/stale journeys become visible;
-- ownership is explicit;
-- patients can see an appropriate Health Passport view;
-- Ayanda can retrieve, explain, navigate and execute permitted administrative actions;
-- multilingual voice can reduce interaction friction;
-- consequential actions remain human-confirmed;
-- emergency access can be explicit and audited;
-- managers gain appropriately aggregated operational visibility;
-- interoperability is designed in rather than bolted on;
-- clinical judgement remains with authorised healthcare professionals.
+- one patient can have one coherent longitudinal view;
+- source systems remain authoritative where appropriate;
+- provenance remains visible;
+- identity can be resolved across systems;
+- emergency access is explicit and audited;
+- consent/access context is governed;
+- clinicians have role-specific workspaces;
+- referrals move through accountable closed-loop states;
+- appointments, capacity and ambulance transfers are coordinated;
+- exceptions and SLA breaches are visible early;
+- patients receive an appropriate portal/Health Passport experience;
+- national/provincial/district/facility oversight is possible through appropriately aggregated data;
+- mock standards-based integration proves that CarePath can connect rather than replace systems;
+- Ayanda retrieves, explains, navigates and executes only permitted governed actions;
+- multilingual voice reduces friction;
+- clinical judgement remains with authorised healthcare professionals;
+- the patient remains digitally visible throughout the healthcare journey.
 
 Apply this final question to every feature:
 
-> **Does this help the right authorised person access the right patient information, coordinate the next care action, preserve accountability, and keep the patient journey intact across institutions?**
+> **Does this help the right authorised person access the right patient information, coordinate the next care action, preserve provenance and accountability, and keep the patient journey intact across institutions?**
 
 If the answer is no, simplify it, redesign it or remove it.
