@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
-import type { AuditEvent, CareOutcome, DemoUser, Facility, Patient, Referral, ReferralStatus } from './domain.js';
+import type { Appointment, AuditEvent, BedCapacity, BedType, CareOutcome, DemoUser, Facility, Patient, Referral, ReferralStatus } from './domain.js';
 
 const now = new Date();
 const isoDaysAgo = (d: number) => new Date(now.getTime() - d * 86400000).toISOString();
 const isoHoursAgo = (h: number) => new Date(now.getTime() - h * 3600000).toISOString();
-const isoDaysAhead = (d: number) => new Date(now.getTime() + d * 86400000).toISOString();
+const isoDaysAhead = (d: number, hour = 9) => { const x = new Date(now.getTime() + d * 86400000); x.setHours(hour,0,0,0); return x.toISOString(); };
 
 export const facilities: Facility[] = [
   { id: 'fac-clinic-1', name: 'Mahlasedi Community Clinic (Demo)', type: 'PUBLIC', province: 'Limpopo', district: 'Capricorn', services: ['Primary Care', 'Chronic Care', 'Referrals'], demo: true },
@@ -17,6 +17,23 @@ export const facilities: Facility[] = [
   { id: 'fac-lab-1', name: 'Ubuntu Pathology Network (Demo)', type: 'LAB', province: 'Gauteng', district: 'Johannesburg', services: ['Pathology', 'Haematology', 'Chemistry'], demo: true },
   { id: 'fac-lab-2', name: 'Limpopo Diagnostics Lab (Demo)', type: 'LAB', province: 'Limpopo', district: 'Capricorn', services: ['Pathology', 'Microbiology', 'Chemistry'], demo: true },
   { id: 'fac-pharm-1', name: 'CareLink Pharmacy (Demo)', type: 'PHARMACY', province: 'Gauteng', district: 'Johannesburg', services: ['Dispensing', 'Medication Reconciliation'], demo: true }
+];
+
+export const bedCapacity: BedCapacity[] = [
+  { facilityId:'fac-hosp-1', bedType:'GENERAL', staffedBeds:42, occupiedBeds:34, reservedBeds:2, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-1', bedType:'HIGH_CARE', staffedBeds:10, occupiedBeds:8, reservedBeds:1, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-1', bedType:'ICU', staffedBeds:8, occupiedBeds:7, reservedBeds:0, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-2', bedType:'GENERAL', staffedBeds:160, occupiedBeds:143, reservedBeds:6, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-2', bedType:'HIGH_CARE', staffedBeds:24, occupiedBeds:20, reservedBeds:1, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-2', bedType:'ICU', staffedBeds:18, occupiedBeds:17, reservedBeds:1, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-3', bedType:'GENERAL', staffedBeds:75, occupiedBeds:58, reservedBeds:5, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-3', bedType:'HIGH_CARE', staffedBeds:16, occupiedBeds:11, reservedBeds:2, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-3', bedType:'ICU', staffedBeds:12, occupiedBeds:8, reservedBeds:1, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-4', bedType:'GENERAL', staffedBeds:190, occupiedBeds:181, reservedBeds:4, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-4', bedType:'HIGH_CARE', staffedBeds:20, occupiedBeds:18, reservedBeds:1, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-4', bedType:'ICU', staffedBeds:14, occupiedBeds:14, reservedBeds:0, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-5', bedType:'GENERAL', staffedBeds:38, occupiedBeds:26, reservedBeds:4, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-5', bedType:'HIGH_CARE', staffedBeds:6, occupiedBeds:4, reservedBeds:0, updatedAt:isoHoursAgo(1), synthetic:true }
 ];
 
 const firstNames = ['Thandi','Lerato','Sipho','Nomsa','Kabelo','Ayanda','Lindiwe','Mpho','Thabo','Zanele','Neo','Busisiwe','Tshepo','Nandi','Karabo','Palesa','Sibusiso','Dineo','Andile','Naledi','Tumelo','Nokuthula','Bongani','Refiloe','Khanyisa','Lesedi','Themba','Boitumelo','Nhlanhla','Precious'];
@@ -54,6 +71,7 @@ export const patients: Patient[] = Array.from({ length: 60 }, (_, i) => createPa
 
 const hospitalIds = ['fac-hosp-1','fac-hosp-2','fac-hosp-3','fac-hosp-4','fac-hosp-5'];
 const services = ['Cardiology','Internal Medicine','Neurology','Orthopaedics','Oncology','General Surgery'];
+const bedTypeForService = (service:string): BedType | undefined => service === 'General Surgery' || service === 'Oncology' ? 'GENERAL' : service === 'Cardiology' && Math.random() < 0 ? 'HIGH_CARE' : undefined;
 const outcomesByHospital: Record<string, CareOutcome[]> = {
   'fac-hosp-1': ['RECOVERED','RECOVERED','IMPROVED','RECOVERED','ONGOING','RECOVERED','IMPROVED','RECOVERED','DECEASED','RECOVERED'],
   'fac-hosp-2': ['RECOVERED','IMPROVED','ONGOING','RECOVERED','DECEASED','IMPROVED','RECOVERED','ONGOING','DECEASED','RECOVERED'],
@@ -68,35 +86,59 @@ let referralCounter = 1001;
 for (let i = 0; i < 45; i++) {
   const patient = patients[i % patients.length];
   const destination = hospitalIds[i % hospitalIds.length];
-  const service = services[i % services.length];
+  const service = i === 0 ? 'Cardiology' : services[i % services.length];
   const completed = i < 32;
-  const status: ReferralStatus = completed ? closedStatuses[i % closedStatuses.length] : (['SUBMITTED','RECEIVED','ACCEPTED','SCHEDULED','PATIENT_NOTIFIED','MISSED','FOLLOWUP_REQUIRED'] as ReferralStatus[])[i % 7];
+  const status: ReferralStatus = i === 0 ? 'SUBMITTED' : completed ? closedStatuses[i % closedStatuses.length] : (['SUBMITTED','RECEIVED','ACCEPTED','SCHEDULED','PATIENT_NOTIFIED','MISSED','FOLLOWUP_REQUIRED'] as ReferralStatus[])[i % 7];
   const createdAgo = completed ? 10 + i : 1 + (i % 6);
   const updatedAgoHours = completed ? 4 + i : (status === 'SUBMITTED' && i % 2 === 0 ? 32 + i : 2 + i);
   const outcome = completed ? outcomesByHospital[destination][i % outcomesByHospital[destination].length] : undefined;
+  const bedType = bedTypeForService(service);
   referrals.push({
     id: `ref-${referralCounter++}`,
     patientId: patient.id,
-    service: i === 0 ? 'Cardiology' : service,
+    service,
     reason: i === 0 ? 'Persistent hypertension; specialist review requested' : `Synthetic ${service.toLowerCase()} referral`,
     sourceFacilityId: i % 2 === 0 ? 'fac-clinic-1' : 'fac-clinic-2',
     destinationFacilityId: i === 0 ? 'fac-hosp-2' : destination,
     owner: status === 'SUBMITTED' ? 'Receiving Coordination Team' : 'Care Coordination Team',
-    status: i === 0 ? 'SUBMITTED' : status,
+    status,
     priority: i % 5 === 0 ? 'PRIORITY' : 'ROUTINE',
     createdAt: i === 0 ? isoHoursAgo(30) : isoDaysAgo(createdAgo),
     updatedAt: i === 0 ? isoHoursAgo(30) : isoHoursAgo(updatedAgoHours),
     acknowledgedAt: completed || status !== 'SUBMITTED' ? isoHoursAgo(Math.max(1, updatedAgoHours - 2)) : undefined,
-    appointmentAt: ['SCHEDULED','PATIENT_NOTIFIED'].includes(status) ? isoDaysAhead(1 + (i % 4)) : undefined,
+    appointmentAt: ['SCHEDULED','PATIENT_NOTIFIED'].includes(status) ? isoDaysAhead(1 + (i % 4), 8 + (i % 7)) : undefined,
+    requiresBed: Boolean(bedType),
+    bedType,
     outcome,
     outcomeAt: outcome ? isoDaysAgo(Math.max(1, i % 14)) : undefined,
     outcomeNote: outcome ? `Synthetic referral outcome: ${outcome.toLowerCase()}` : undefined,
-    events: [{ id: `evt-${i+1}`, at: i === 0 ? isoHoursAgo(30) : isoDaysAgo(createdAgo), actor: i % 2 === 0 ? 'Dr Naledi Dlamini' : 'Dr Sipho Nkosi', to: i === 0 ? 'SUBMITTED' : status, note: 'Synthetic referral activity', source: 'SYSTEM' }]
+    events: [{ id: `evt-${i+1}`, at: i === 0 ? isoHoursAgo(30) : isoDaysAgo(createdAgo), actor: i % 2 === 0 ? 'Dr Naledi Dlamini' : 'Dr Sipho Nkosi', to: status, note: 'Synthetic referral activity', source: 'SYSTEM' }]
   });
 }
 
+export const appointments: Appointment[] = referrals
+  .filter(r => r.appointmentAt)
+  .slice(0, 12)
+  .map((r, i) => ({
+    id:`appt-${2001+i}`,
+    patientId:r.patientId,
+    facilityId:r.destinationFacilityId,
+    referralId:r.id,
+    service:r.service,
+    startAt:r.appointmentAt!,
+    durationMinutes:i%3===0?60:30,
+    status:i%5===0?'REQUESTED':'BOOKED',
+    bookedBy:i%2===0?'Care Coordinator':'Dr Naledi Dlamini',
+    bookingSource:'SYSTEM',
+    requiresBed:Boolean(r.requiresBed),
+    bedType:r.bedType,
+    note:r.requiresBed?'Synthetic booking includes bed-capacity validation':'Synthetic outpatient booking',
+    createdAt:isoDaysAgo(2+i),
+    updatedAt:isoHoursAgo(3+i)
+  }));
+
 export const auditEvents: AuditEvent[] = [
-  { id: 'aud-1', at: isoHoursAgo(2), actor: 'System', action: 'demo.seed', objectType: 'Dataset', objectId: 'carepath-v0.2', source: 'SYSTEM', outcome: 'SUCCESS' },
+  { id: 'aud-1', at: isoHoursAgo(2), actor: 'System', action: 'demo.seed', objectType: 'Dataset', objectId: 'carepath-v0.3', source: 'SYSTEM', outcome: 'SUCCESS' },
   { id: 'aud-2', at: isoHoursAgo(4), actor: 'Care Coordinator', action: 'referral.review', objectType: 'Referral', objectId: 'ref-1008', source: 'UI', outcome: 'SUCCESS' },
   { id: 'aud-3', at: isoHoursAgo(7), actor: 'Dr Naledi Dlamini', action: 'patient.read', objectType: 'Patient', objectId: 'pat-thandi', source: 'UI', outcome: 'SUCCESS' }
 ];
