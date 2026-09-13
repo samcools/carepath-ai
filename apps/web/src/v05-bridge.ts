@@ -1,4 +1,5 @@
 type AyandaV05Response = { v05View?: string };
+type SessionUser = { role: string };
 
 const nativeFetch = window.fetch.bind(window);
 
@@ -20,7 +21,7 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
         queueMicrotask(() => {
           const value = String(data.v05View);
           const button = [...document.querySelectorAll<HTMLButtonElement>('.v05-nav button[data-v05]')]
-            .find(b => b.dataset.v05 === value);
+            .find(b => b.dataset.v05 === value && !b.hidden);
           button?.click();
         });
       }
@@ -34,11 +35,38 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
 
 let lastShellPresent = false;
 let roleTimer: number | undefined;
+let visibilityTimer: number | undefined;
+
+async function applyRoleVisibility() {
+  window.clearTimeout(visibilityTimer);
+  visibilityTimer = window.setTimeout(async () => {
+    try {
+      const response = await nativeFetch('/api/auth/me', { credentials: 'include' });
+      if (!response.ok) return;
+      const data = await response.json() as { user?: SessionUser };
+      const role = data.user?.role;
+      if (!role) return;
+
+      document.querySelectorAll<HTMLButtonElement>('.v05-nav button[data-v05]').forEach(button => {
+        const view = button.dataset.v05;
+        // Managers and auditors default to aggregated/de-identified views; they
+        // should not be invited into patient identity/consent browsing.
+        if ((role === 'MANAGER' || role === 'AUDITOR') && view === 'identity') button.hidden = true;
+        else if (role === 'AUDITOR' && view === 'watch') button.hidden = true;
+        else if (role === 'PATIENT' && (view === 'watch' || view === 'exchange')) button.hidden = true;
+        else button.hidden = false;
+      });
+    } catch {
+      // Leave the server as the ultimate permission boundary.
+    }
+  }, 40);
+}
 
 function notifySessionChange() {
   window.clearTimeout(roleTimer);
   roleTimer = window.setTimeout(() => {
     window.dispatchEvent(new Event('carepath:user-changed'));
+    void applyRoleVisibility();
   }, 180);
 }
 
@@ -56,6 +84,7 @@ const observer = new MutationObserver(() => {
   const shellPresent = Boolean(document.querySelector('.app-shell'));
   if (shellPresent && !lastShellPresent) notifySessionChange();
   if (shellPresent && !document.querySelector('.v05-nav')) notifySessionChange();
+  if (shellPresent && document.querySelector('.v05-nav')) void applyRoleVisibility();
   lastShellPresent = shellPresent;
 });
 observer.observe(document.documentElement, { childList: true, subtree: true });
