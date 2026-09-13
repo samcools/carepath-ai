@@ -1,5 +1,7 @@
-import express from 'express';
+import express, { type NextFunction, type Request, type Response } from 'express';
 import { registerV05Routes } from './v05Routes.js';
+import { requireAuth } from './auth.js';
+import { users } from './data.js';
 
 /**
  * Temporary v0.5 extension bootstrap.
@@ -14,6 +16,27 @@ import { registerV05Routes } from './v05Routes.js';
  */
 const marker = Symbol.for('carepath.v05.bootstrap');
 const proto = express.application as any;
+const v05Auth = requireAuth(users);
+
+function managementPatientGuard(req: Request, res: Response, next: NextFunction) {
+  const role = req.currentUser?.role;
+  if (!role) return res.status(401).json({ error: 'Authentication required' });
+
+  // Managers and auditors receive aggregated/de-identified management views by
+  // default. They must not gain general longitudinal clinical access merely
+  // because they hold an oversight role.
+  if (role === 'MANAGER' || role === 'AUDITOR') {
+    const patientLevelPrefixes = [
+      '/identity', '/consent', '/care-plans', '/documents', '/emergency', '/breakglass'
+    ];
+    if (patientLevelPrefixes.some(prefix => req.path === prefix || req.path.startsWith(`${prefix}/`))) {
+      return res.status(403).json({
+        error: 'This oversight role is restricted to aggregated/de-identified views for this module.'
+      });
+    }
+  }
+  next();
+}
 
 if (!proto[marker]) {
   const originalUse = proto.use;
@@ -25,6 +48,7 @@ if (!proto[marker]) {
     // that order. Register after session exists and before API route handlers.
     if (this.__carepathUseCount === 4 && !this.__carepathV05Registered) {
       this.__carepathV05Registered = true;
+      originalUse.call(this, '/api/v05', v05Auth, managementPatientGuard);
       registerV05Routes(this);
     }
     return result;
