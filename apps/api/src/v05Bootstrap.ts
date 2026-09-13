@@ -26,15 +26,23 @@ function managementPatientGuard(req: Request, res: Response, next: NextFunction)
   // default. They must not gain general longitudinal clinical access merely
   // because they hold an oversight role.
   if (role === 'MANAGER' || role === 'AUDITOR') {
-    const patientLevelPrefixes = [
-      '/identity', '/consent', '/care-plans', '/documents', '/emergency', '/breakglass'
-    ];
+    const patientLevelPrefixes = ['/identity', '/consent', '/care-plans', '/documents', '/emergency'];
     if (patientLevelPrefixes.some(prefix => req.path === prefix || req.path.startsWith(`${prefix}/`))) {
       return res.status(403).json({
         error: 'This oversight role is restricted to aggregated/de-identified views for this module.'
       });
     }
   }
+
+  // Compliance/audit users may review Break Glass events. Operational managers
+  // cannot browse patient-level emergency-access history, and no oversight role
+  // can invoke Break Glass through this guard.
+  if (req.path === '/breakglass' || req.path.startsWith('/breakglass/')) {
+    if (role === 'MANAGER' || (role === 'AUDITOR' && req.method !== 'GET')) {
+      return res.status(403).json({ error: 'Break Glass access is restricted by role and purpose.' });
+    }
+  }
+
   next();
 }
 
