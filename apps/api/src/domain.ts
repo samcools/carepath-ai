@@ -76,6 +76,17 @@ export interface Facility {
   demo: true;
 }
 
+export type BedType = 'GENERAL' | 'HIGH_CARE' | 'ICU' | 'MATERNITY' | 'PAEDIATRIC';
+export interface BedCapacity {
+  facilityId: string;
+  bedType: BedType;
+  staffedBeds: number;
+  occupiedBeds: number;
+  reservedBeds: number;
+  updatedAt: string;
+  synthetic: true;
+}
+
 export interface ReferralEvent {
   id: string;
   at: string;
@@ -102,10 +113,31 @@ export interface Referral {
   updatedAt: string;
   appointmentAt?: string;
   acknowledgedAt?: string;
+  requiresBed?: boolean;
+  bedType?: BedType;
   outcome?: CareOutcome;
   outcomeAt?: string;
   outcomeNote?: string;
   events: ReferralEvent[];
+}
+
+export type AppointmentStatus = 'REQUESTED' | 'BOOKED' | 'CHECKED_IN' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW';
+export interface Appointment {
+  id: string;
+  patientId: string;
+  facilityId: string;
+  referralId?: string;
+  service: string;
+  startAt: string;
+  durationMinutes: number;
+  status: AppointmentStatus;
+  bookedBy: string;
+  bookingSource: 'UI' | 'VOICE' | 'AI' | 'SYSTEM';
+  requiresBed: boolean;
+  bedType?: BedType;
+  note?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuditEvent {
