@@ -8,6 +8,12 @@ CarePath AI is a Pyrneo-branded hackathon prototype for longitudinal health reco
 
 > **Clinical safety boundary:** CarePath coordinates care and authorised information access. It does not autonomously diagnose, prescribe, override clinicians or replace clinical judgement.
 
+## Live hackathon demonstrator
+
+**https://carepath-ai-xdad.onrender.com**
+
+Render currently reports the service live. The application uses synthetic demonstration data only.
+
 ## Working v0.1.0
 
 The repository now contains a runnable full-stack demonstrator with:
