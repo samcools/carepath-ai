@@ -2,171 +2,102 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
-type User = { id: string; username: string; displayName: string; role: string; facilityId: string | null };
-type Dashboard = { metrics: Record<string, number>; staleReferrals: any[]; recentAudit: any[] };
-type PatientSummary = { id: string; syntheticId: string; firstName: string; surname: string; dateOfBirth: string; preferredLanguage: string; allergies: number; conditions: number; medications: number; results: number; encounters: number };
-type PatientDetail = { patient: any; referrals: any[] };
-type Referral = any;
-type View = 'command' | 'patients' | 'referrals' | 'facilities' | 'audit';
+type User = { id:string; username:string; displayName:string; role:string; facilityId:string|null; patientId?:string };
+type View = 'command'|'patients'|'referrals'|'outcomes'|'caregaps'|'facilities'|'passport'|'audit'|'admin';
+type Dashboard = { metrics:Record<string,number>; staleReferrals:any[]; recentAudit:any[]; outcomeSnapshot:any[] };
+type PatientSummary = { id:string; syntheticId:string; firstName:string; surname:string; preferredLanguage:string; allergies:number; conditions:number; medications:number; results:number; encounters:number };
 
-const api = async (path: string, init?: RequestInit) => {
-  const res = await fetch(path, { credentials: 'include', headers: { 'Content-Type': 'application/json', ...(init?.headers || {}) }, ...init });
-  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || `Request failed (${res.status})`);
-  return res.json();
+const api = async (path:string, init?:RequestInit) => {
+  const res = await fetch(path,{credentials:'include',headers:{'Content-Type':'application/json',...(init?.headers||{})},...init});
+  const body = await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(body.error || body.message || `Request failed (${res.status})`);
+  return body;
 };
 
-const languages = [
-  ['en-ZA','English'],['af-ZA','Afrikaans'],['zu-ZA','isiZulu'],['xh-ZA','isiXhosa'],['st-ZA','Sesotho'],['tn-ZA','Setswana'],['nso-ZA','Sepedi'],['ts-ZA','XiTsonga'],['ve-ZA','Tshivenda'],['ss-ZA','siSwati'],['nr-ZA','isiNdebele']
-];
+const languages = [['en-ZA','English'],['af-ZA','Afrikaans'],['zu-ZA','isiZulu'],['xh-ZA','isiXhosa'],['st-ZA','Sesotho'],['tn-ZA','Setswana'],['nso-ZA','Sepedi'],['ts-ZA','XiTsonga'],['ve-ZA','Tshivenda'],['ss-ZA','siSwati'],['nr-ZA','isiNdebele']];
+const roleNames:Record<string,string>={ADMIN:'Administrator',CLINICIAN:'Referring clinician',SPECIALIST:'Specialist',NURSE:'Nurse',COORDINATOR:'Care coordinator',PHARMACIST:'Pharmacist',LAB_TECH:'Lab technologist',PATIENT_NAVIGATOR:'Patient navigator',MANAGER:'District manager',AUDITOR:'Auditor',PATIENT:'Patient'};
 
-function Login({ onLogin }: { onLogin: (u: User) => void }) {
-  const [username, setUsername] = useState('clinician');
-  const [password, setPassword] = useState('CarePath!2026');
-  const [error, setError] = useState('');
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault(); setError('');
-    try { const data = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) }); onLogin(data.user); }
-    catch (err: any) { setError(err.message); }
-  };
+function allowedViews(user:User):{id:View;label:string;icon:string}[]{
+  const base=[
+    {id:'command' as View,label:user.role==='PATIENT'?'My Overview':'Command Centre',icon:'◫'},
+    {id:'patients' as View,label:user.role==='PATIENT'?'My Record':'Patients',icon:'◎'},
+    {id:'referrals' as View,label:user.role==='PATIENT'?'My Referrals':'Referrals',icon:'↗'},
+    {id:'facilities' as View,label:'Facilities',icon:'⌂'},
+    {id:'passport' as View,label:'Health Passport',icon:'▣'}
+  ];
+  if(user.role!=='PATIENT') base.splice(3,0,{id:'outcomes',label:'Referral Outcomes',icon:'◒'} as any,{id:'caregaps',label:'Care Gaps',icon:'◇'} as any);
+  if(['AUDITOR','MANAGER','ADMIN'].includes(user.role)) base.push({id:'audit',label:'Audit',icon:'☷'});
+  if(user.role==='ADMIN') base.push({id:'admin',label:'Admin',icon:'⚙'});
+  return base;
+}
+
+function Login({onLogin}:{onLogin:(u:User)=>void}){
+  const [username,setUsername]=useState('clinician'); const [password,setPassword]=useState('CarePath!2026'); const [error,setError]=useState('');
+  const submit=async(e:React.FormEvent)=>{e.preventDefault();setError('');try{const d=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username,password})});onLogin(d.user)}catch(err:any){setError(err.message)}};
   return <div className="login-shell">
-    <div className="login-visual">
-      <img className="pyrneo-logo" src="/pyrneo.svg" alt="Pyrneo" />
-      <div className="hero-copy">
-        <div className="carepath-brand"><img src="/carepath-mark.svg" alt=""/><div><strong>CarePath AI</strong><span>One Patient. One Journey. One Trusted Health Record.</span></div></div>
-        <h1>From referral to care — without losing the patient in between.</h1>
-        <p>A secure synthetic-data demonstrator for longitudinal records, public-private interoperability and accountable care coordination.</p>
-        <div className="hero-chips"><span>OneRecord</span><span>Exchange</span><span>Journey</span><span>Ayanda</span></div>
-      </div>
-    </div>
-    <form className="login-card" onSubmit={submit}>
-      <span className="eyebrow">HACKATHON DEMO</span>
-      <h2>Sign in to CarePath</h2>
-      <p>Use the seeded synthetic-data accounts.</p>
-      <label>Username<input value={username} onChange={e=>setUsername(e.target.value)} /></label>
-      <label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} /></label>
-      {error && <div className="error-banner">{error}</div>}
-      <button className="primary" type="submit">Sign in</button>
-      <div className="demo-note">Demo accounts: clinician, coordinator, manager, auditor, admin<br/>Password: <code>CarePath!2026</code></div>
-    </form>
-  </div>;
+    <section className="login-visual"><img className="pyrneo-logo" src="/pyrneo.svg" alt="Pyrneo"/><div className="hero-copy"><div className="carepath-brand"><img src="/carepath-mark.svg" alt="CarePath AI"/><div><strong>CarePath AI</strong><span>One Patient. One Journey. One Trusted Health Record.</span></div></div><h1>Connected records. Accountable referrals. Safer continuity.</h1><p>A Pyrneo digital-health demonstrator connecting longitudinal patient records, public/private exchange, patient navigation and governed AI assistance.</p><div className="hero-chips"><span>OneRecord</span><span>Exchange</span><span>Journey</span><span>Health Passport</span><span>Ayanda</span></div></div></section>
+    <form className="login-card" onSubmit={submit}><span className="eyebrow">SYNTHETIC HACKATHON DEMO</span><h2>Sign in to CarePath</h2><p>Choose a role to see how access changes by user type.</p><label>User type<select value={username} onChange={e=>setUsername(e.target.value)}><option value="clinician">Referring clinician</option><option value="specialist">Specialist</option><option value="nurse">Nurse</option><option value="coordinator">Coordinator</option><option value="navigator">Patient navigator</option><option value="pharmacist">Pharmacist</option><option value="labtech">Lab technologist</option><option value="manager">District manager</option><option value="auditor">Auditor</option><option value="admin">Administrator</option><option value="patient">Patient — Thandi</option></select></label><label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)}/></label>{error&&<div className="error-banner">{error}</div>}<button className="primary" type="submit">Sign in</button><div className="demo-note">All accounts use <code>CarePath!2026</code><br/>All records, hospitals and outcomes are synthetic.</div></form>
+  </div>
 }
 
-function App() {
-  const [user, setUser] = useState<User | null>(null);
-  const [view, setView] = useState<View>('command');
-  const [dashboard, setDashboard] = useState<Dashboard | null>(null);
-  const [patients, setPatients] = useState<PatientSummary[]>([]);
-  const [selectedPatient, setSelectedPatient] = useState<PatientDetail | null>(null);
-  const [referrals, setReferrals] = useState<Referral[]>([]);
-  const [facilities, setFacilities] = useState<any[]>([]);
-  const [audit, setAudit] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [filter, setFilter] = useState<string>('all');
-  const [language, setLanguage] = useState('en-ZA');
-  const [toast, setToast] = useState('');
+function App(){
+  const [user,setUser]=useState<User|null>(null); const [view,setView]=useState<View>('command'); const [dashboard,setDashboard]=useState<Dashboard|null>(null); const [patients,setPatients]=useState<PatientSummary[]>([]); const [selectedPatient,setSelectedPatient]=useState<any|null>(null); const [referrals,setReferrals]=useState<any[]>([]); const [facilities,setFacilities]=useState<any[]>([]); const [audit,setAudit]=useState<any[]>([]); const [outcomes,setOutcomes]=useState<any>(null); const [caregaps,setCaregaps]=useState<any>(null); const [passport,setPassport]=useState<any>(null); const [loading,setLoading]=useState(false); const [filter,setFilter]=useState('all'); const [language,setLanguage]=useState('en-ZA'); const [toast,setToast]=useState('');
 
-  const refresh = async () => {
-    if (!user) return;
-    setLoading(true);
-    try {
-      const [d,p,r,f] = await Promise.all([api('/api/dashboard'), api('/api/patients'), api(`/api/referrals${filter==='stale'?'?filter=stale':''}`), api('/api/facilities')]);
-      setDashboard(d); setPatients(p.patients); setReferrals(r.referrals); setFacilities(f.facilities);
-      if (['AUDITOR','MANAGER','ADMIN'].includes(user.role)) { const a = await api('/api/audit'); setAudit(a.auditEvents); }
-    } finally { setLoading(false); }
-  };
-
-  useEffect(() => { api('/api/auth/me').then(d=>setUser(d.user)).catch(()=>{}); }, []);
-  useEffect(() => { if (user) refresh(); }, [user, filter]);
-
-  const openPatient = async (id: string) => { setSelectedPatient(await api(`/api/patients/${id}`)); setView('patients'); };
-  const logout = async () => { try { await api('/api/auth/logout', {method:'POST'}); } finally { setUser(null); } };
-
-  if (!user) return <Login onLogin={setUser} />;
-
+  const refresh=async()=>{if(!user)return;setLoading(true);try{
+    const base=await Promise.all([api('/api/dashboard'),api('/api/patients'),api(`/api/referrals${filter==='stale'?'?filter=stale':''}`),api('/api/facilities')]);
+    setDashboard(base[0]);setPatients(base[1].patients);setReferrals(base[2].referrals);setFacilities(base[3].facilities);
+    if(user.role!=='PATIENT'){const [o,g]=await Promise.all([api('/api/outcomes'),api('/api/caregaps')]);setOutcomes(o);setCaregaps(g)}
+    try{setPassport(await api(`/api/passport${user.patientId?`/${user.patientId}`:''}`))}catch{setPassport(null)}
+    if(['AUDITOR','MANAGER','ADMIN'].includes(user.role)){setAudit((await api('/api/audit')).auditEvents)}
+  }finally{setLoading(false)}};
+  useEffect(()=>{api('/api/auth/me').then(d=>setUser(d.user)).catch(()=>{})},[]);
+  useEffect(()=>{if(user)refresh()},[user,filter]);
+  const openPatient=async(id:string)=>{setSelectedPatient(await api(`/api/patients/${id}`));setView('patients')};
+  const goHome=()=>{setSelectedPatient(null);setView('command')};
+  const logout=async()=>{try{await api('/api/auth/logout',{method:'POST'})}finally{setUser(null);setView('command')}};
+  if(!user)return <Login onLogin={setUser}/>;
+  const nav=allowedViews(user);
   return <div className="app-shell">
-    <header className="topbar">
-      <div className="brand-row"><img className="top-pyrneo" src="/pyrneo.svg" alt="Pyrneo"/><span className="divider"/><img className="mini-mark" src="/carepath-mark.svg" alt=""/><strong>CarePath AI</strong></div>
-      <nav>{[
-        ['command','Command Centre'],['patients','Patients'],['referrals','Referrals'],['facilities','Facilities'], ...( ['AUDITOR','MANAGER','ADMIN'].includes(user.role) ? [['audit','Audit']] : [] )
-      ].map(([id,label]) => <button key={id} className={view===id?'active':''} onClick={()=>setView(id as View)}>{label}</button>)}</nav>
-      <div className="userbox"><span>{user.displayName}<small>{user.role}</small></span><button onClick={logout}>Sign out</button></div>
-    </header>
-    <main className="content">
-      <div className="synthetic-banner"><strong>Synthetic Demo Data</strong><span>No live patient or health-system data is connected.</span>{loading && <span className="pulse">Refreshing…</span>}</div>
-      {view === 'command' && <CommandCentre dashboard={dashboard} setView={setView}/>} 
-      {view === 'patients' && <Patients patients={patients} selected={selectedPatient} onOpen={openPatient} onBack={()=>setSelectedPatient(null)} />}
-      {view === 'referrals' && <Referrals referrals={referrals} filter={filter} setFilter={setFilter} refresh={refresh} user={user}/>} 
-      {view === 'facilities' && <Facilities facilities={facilities}/>} 
-      {view === 'audit' && <Audit events={audit}/>} 
+    <header className="topbar"><button className="brand-button" onClick={goHome} title="Go to CarePath homepage"><img className="top-pyrneo" src="/pyrneo.svg" alt="Pyrneo"/><span className="divider"/><img className="mini-mark" src="/carepath-mark.svg" alt="CarePath AI"/><strong>CarePath AI</strong></button><nav>{nav.map(n=><button key={n.id} className={view===n.id?'active':''} onClick={()=>{setSelectedPatient(null);setView(n.id)}}><span>{n.icon}</span>{n.label}</button>)}</nav><div className="userbox"><span>{user.displayName}<small>{roleNames[user.role]||user.role}</small></span><button onClick={logout}>Sign out</button></div></header>
+    <main className="content"><div className="synthetic-banner"><strong>Synthetic Demo Data</strong><span>60 synthetic patients • no live clinical system connected</span>{loading&&<span className="pulse">Refreshing…</span>}</div>
+      {view==='command'&&<CommandCentre dashboard={dashboard} setView={setView}/>} {view==='patients'&&<Patients patients={patients} selected={selectedPatient} onOpen={openPatient} onBack={()=>setSelectedPatient(null)}/>} {view==='referrals'&&<Referrals referrals={referrals} filter={filter} setFilter={setFilter} refresh={refresh} user={user}/>} {view==='outcomes'&&<Outcomes data={outcomes}/>} {view==='caregaps'&&<CareGaps data={caregaps} onOpen={openPatient}/>} {view==='facilities'&&<Facilities facilities={facilities}/>} {view==='passport'&&<HealthPassport data={passport} user={user}/>} {view==='audit'&&<Audit events={audit}/>} {view==='admin'&&<Admin/>}
     </main>
-    <Ayanda language={language} setLanguage={setLanguage} onNavigate={(v:View)=>setView(v)} onOpenPatient={openPatient} onFilter={(f:string)=>{setFilter(f); setView('referrals');}} onChanged={()=>{refresh(); setToast('CarePath updated successfully.');}}/>
-    {toast && <div className="toast" onAnimationEnd={()=>setToast('')}>{toast}</div>}
-  </div>;
+    <Ayanda language={language} setLanguage={setLanguage} onNavigate={(v:View)=>setView(v)} onOpenPatient={openPatient} onFilter={(f:string)=>{setFilter(f);setView('referrals')}} onChanged={()=>{refresh();setToast('CarePath updated successfully.')}}/>
+    {toast&&<div className="toast">{toast}</div>}
+  </div>
 }
 
-function CommandCentre({ dashboard, setView }: any) {
-  if (!dashboard) return <Empty message="Loading CarePath Command Centre…"/>;
-  const m = dashboard.metrics;
-  return <>
-    <section className="page-heading"><div><span className="eyebrow">CAREPATH COMMAND</span><h1>Continuity of care, visible.</h1><p>One operational view across longitudinal records, referrals, exceptions and accountable next actions.</p></div><div className="northstar">One Patient.<br/><b>One Journey.</b><br/>One Trusted Health Record.</div></section>
-    <section className="metric-grid">
-      <Metric label="Synthetic patients" value={m.patients} icon="◎" />
-      <Metric label="Open referrals" value={m.openReferrals} icon="↗" />
-      <Metric label="Awaiting acceptance" value={m.awaitingAcceptance} icon="◷" warn />
-      <Metric label="Scheduled" value={m.scheduled} icon="□" />
-      <Metric label="Stale >24h" value={m.stale} icon="!" critical />
-      <Metric label="Connected demo facilities" value={m.facilities} icon="⌂" />
-    </section>
-    <section className="two-col">
-      <Panel title="Referral leakage / action queue" action={<button onClick={()=>setView('referrals')}>Open referrals</button>}>
-        {dashboard.staleReferrals.length ? dashboard.staleReferrals.map((r:any)=><div className="list-row" key={r.id}><div><b>{r.patientName}</b><span>{r.service} • {r.destinationName}</span></div><Status status={r.status}/><small>{age(r.updatedAt)}</small></div>) : <Empty message="No stale referrals."/>}
-      </Panel>
-      <Panel title="Recent governed activity">
-        {dashboard.recentAudit.map((a:any)=><div className="activity" key={a.id}><span className="activity-dot"/><div><b>{a.action}</b><span>{a.actor}</span></div><small>{formatTime(a.at)}</small></div>)}
-      </Panel>
-    </section>
-    <section className="journey-strip"><div><span>IDENTITY</span><b>Trusted patient match</b></div><i>→</i><div><span>ONERECORD</span><b>Longitudinal context</b></div><i>→</i><div><span>EXCHANGE</span><b>Authorised interoperability</b></div><i>→</i><div><span>JOURNEY</span><b>Referral to closure</b></div></section>
-  </>;
-}
+function CommandCentre({dashboard,setView}:any){if(!dashboard)return <Empty message="Loading CarePath Command Centre…"/>;const m=dashboard.metrics;return <><section className="page-heading"><div><span className="eyebrow">CAREPATH COMMAND</span><h1>Continuity of care, visible.</h1><p>One operational view across records, referrals, outcomes, care gaps and accountable next actions.</p></div><div className="northstar">One Patient.<br/><b>One Journey.</b><br/>One Trusted Health Record.</div></section><section className="metric-grid"><Metric label="Visible patients" value={m.patients} icon="◎"/><Metric label="Open referrals" value={m.openReferrals} icon="↗"/><Metric label="Awaiting acceptance" value={m.awaitingAcceptance} icon="◷" warn/><Metric label="Stale >24h" value={m.stale} icon="!" critical/><Metric label="Recovered / improved" value={m.recoveredOrImproved} icon="✓" good/><Metric label="Deceased outcomes" value={m.deceased} icon="†"/></section><section className="dashboard-grid"><Panel title="Referral leakage / action queue" action={<button onClick={()=>setView('referrals')}>Open referrals</button>}>{dashboard.staleReferrals.length?dashboard.staleReferrals.map((r:any)=><div className="list-row" key={r.id}><div><b>{r.patientName}</b><span>{r.service} • {r.destinationName}</span></div><Status status={r.status}/><small>{age(r.updatedAt)}</small></div>):<Empty message="No stale referrals."/>}</Panel><Panel title="Referral outcome snapshot" action={<button onClick={()=>setView('outcomes')}>View outcomes</button>}>{dashboard.outcomeSnapshot.map((f:any)=><div className="outcome-mini" key={f.facilityId}><div><b>{f.facilityName}</b><span>{f.referred} referrals • {f.outcomesRecorded} outcomes</span></div><strong>{f.favourableObservedPct??'—'}%</strong></div>)}<div className="tiny-disclaimer">Synthetic observed outcomes only — not risk-adjusted quality rankings.</div></Panel></section><section className="feature-grid"><button onClick={()=>setView('patients')}><span>◎</span><b>OneRecord</b><small>Cross-facility patient story with provenance</small></button><button onClick={()=>setView('passport')}><span>▣</span><b>Health Passport</b><small>Patient-facing portable record experience</small></button><button onClick={()=>setView('caregaps')}><span>◇</span><b>Care Gaps</b><small>Operational and information continuity gaps</small></button><button onClick={()=>setView('facilities')}><span>⌂</span><b>Exchange</b><small>Public/private facility and service network</small></button></section></>}
 
-function Patients({patients, selected, onOpen, onBack}: any) {
-  if (selected) return <PatientRecord data={selected} onBack={onBack}/>;
-  return <><PageTitle eyebrow="CAREPATH ONERECORD" title="Patients" desc="Synthetic longitudinal patient records with source provenance."/><div className="cards-grid">{patients.map((p:any)=><button className="patient-card" key={p.id} onClick={()=>onOpen(p.id)}><div className="avatar">{p.firstName[0]}{p.surname[0]}</div><div><h3>{p.firstName} {p.surname}</h3><span>{p.syntheticId} • {p.preferredLanguage}</span><div className="patient-stats"><small>{p.conditions} conditions</small><small>{p.medications} medications</small><small>{p.allergies} allergies</small></div></div><span className="chevron">›</span></button>)}</div></>;
-}
+function Patients({patients,selected,onOpen,onBack}:any){const[q,setQ]=useState('');if(selected)return <PatientRecord data={selected} onBack={onBack}/>;const list=patients.filter((p:any)=>`${p.firstName} ${p.surname} ${p.syntheticId}`.toLowerCase().includes(q.toLowerCase()));return <><PageTitle eyebrow="CAREPATH ONERECORD" title={`Patients (${patients.length})`} desc="Searchable synthetic longitudinal records with source provenance and referral history."/><div className="searchbar"><span>⌕</span><input placeholder="Search patient name or synthetic ID" value={q} onChange={e=>setQ(e.target.value)}/><small>{list.length} shown</small></div><div className="cards-grid">{list.map((p:any)=><button className="patient-card" key={p.id} onClick={()=>onOpen(p.id)}><Avatar p={p}/><div><h3>{p.firstName} {p.surname}</h3><span>{p.syntheticId} • {p.preferredLanguage}</span><div className="patient-stats"><small>{p.conditions} conditions</small><small>{p.medications} meds</small><small>{p.results} results</small></div></div><span className="chevron">›</span></button>)}</div></>}
 
-function PatientRecord({data,onBack}: any) {
-  const p=data.patient;
-  const sections=[['Allergies',p.allergies,'critical'],['Conditions',p.conditions,'blue'],['Current medication',p.medications,'green'],['Results',p.results,'blue'],['Encounters',p.encounters,'']];
-  return <><button className="back" onClick={onBack}>← All patients</button><section className="patient-hero"><div className="avatar large">{p.firstName[0]}{p.surname[0]}</div><div><span className="eyebrow">SYNTHETIC LONGITUDINAL RECORD</span><h1>{p.firstName} {p.surname}</h1><p>{p.syntheticId} • DOB {p.dateOfBirth} • Preferred language: {p.preferredLanguage}</p></div><div className="trust-badge">✓ Trusted demo view<span>Source provenance visible</span></div></section>
-    <div className="record-layout"><div>{sections.map(([title,items,tone]:any)=><Panel key={title} title={title}><div className="record-list">{items.length?items.map((it:any)=><div className={`record-item ${tone}`} key={it.id}><div><b>{it.label}</b><span>{it.detail}</span></div><div className="provenance"><strong>{it.status}</strong><span>{it.sourceFacility}</span><small>{formatDate(it.recordedAt)}</small></div></div>):<Empty message={`No ${title.toLowerCase()} recorded in the synthetic dataset.`}/>}</div></Panel>)}</div><aside><Panel title="Care journey"><div className="timeline">{data.referrals.map((r:any)=><div className="timeline-item" key={r.id}><span/><div><b>{r.service} referral</b><small>{r.sourceFacilityName} → {r.destinationFacilityName}</small><Status status={r.status}/></div></div>)}</div></Panel><div className="safety-note"><b>Clinical safety boundary</b><p>CarePath organises and explains authorised information. It does not diagnose, prescribe or replace clinical judgement.</p></div></aside></div>
-  </>;
-}
+function PatientRecord({data,onBack}:any){const p=data.patient;const sections=[['Allergies',p.allergies,'critical'],['Conditions',p.conditions,'blue'],['Current medication',p.medications,'green'],['Results',p.results,'blue'],['Encounters',p.encounters,'']];return <><button className="back" onClick={onBack}>← All patients</button><section className="patient-hero"><Avatar p={p} large/><div><span className="eyebrow">SYNTHETIC LONGITUDINAL RECORD</span><h1>{p.firstName} {p.surname}</h1><p>{p.syntheticId} • DOB {p.dateOfBirth} • {p.preferredLanguage}</p></div><div className="trust-badge">✓ Provenance visible<span>Cross-facility demo record</span></div></section><div className="record-layout"><div>{sections.map(([title,items,tone]:any)=><Panel key={title} title={title}><div className="record-list">{items.length?items.map((it:any)=><div className={`record-item ${tone}`} key={it.id}><div><b>{it.label}</b><span>{it.detail}</span></div><div className="provenance"><strong>{it.status}</strong><span>{it.sourceFacility}</span><small>{formatDate(it.recordedAt)}</small></div></div>):<Empty message={`No ${String(title).toLowerCase()} recorded.`}/>}</div></Panel>)}</div><aside><Panel title="Care journey">{data.referrals.length?data.referrals.map((r:any)=><div className="timeline-item" key={r.id}><span/><div><b>{r.service}</b><small>{r.sourceFacilityName} → {r.destinationFacilityName}</small><div className="inline-status"><Status status={r.status}/>{r.outcome&&<Outcome outcome={r.outcome}/>}</div></div></div>):<Empty message="No visible referrals."/>}</Panel><div className="safety-note"><b>Clinical safety boundary</b><p>CarePath organises authorised information and workflow. It does not diagnose, prescribe or replace clinical judgement.</p></div></aside></div></>}
 
-function Referrals({ referrals, filter, setFilter, refresh, user }: any) {
-  const allowed = user.role==='CLINICIAN' || user.role==='ADMIN';
-  const transition = async (id:string,to:string) => { await api(`/api/referrals/${id}/transition`, {method:'POST',body:JSON.stringify({to})}); await refresh(); };
-  return <><PageTitle eyebrow="CAREPATH JOURNEY" title="Referrals" desc="Governed hand-offs with explicit state, ownership, exceptions and auditability."/><div className="toolbar"><button className={filter==='all'?'active':''} onClick={()=>setFilter('all')}>All referrals</button><button className={filter==='stale'?'active':''} onClick={()=>setFilter('stale')}>Waiting &gt;24h</button></div><Panel title={`${referrals.length} referral${referrals.length===1?'':'s'}`}><div className="table-wrap"><table><thead><tr><th>Patient</th><th>Service</th><th>From</th><th>Destination</th><th>Status</th><th>Age</th><th>Next action</th></tr></thead><tbody>{referrals.map((r:any)=><tr key={r.id}><td><b>{r.patientName}</b><small>{r.id}</small></td><td>{r.service}<small>{r.priority}</small></td><td>{r.sourceFacilityName}</td><td>{r.destinationFacilityName}</td><td><Status status={r.status}/></td><td>{age(r.updatedAt)}</td><td>{allowed&&r.status==='DRAFT'?<button onClick={()=>transition(r.id,'SUBMITTED')}>Submit</button>:r.status==='SUBMITTED'&&user.role!=='CLINICIAN'?<button onClick={()=>transition(r.id,'RECEIVED')}>Receive</button>:<span className="muted">Governed state</span>}</td></tr>)}</tbody></table></div></Panel></>;
-}
+function Referrals({referrals,filter,setFilter,refresh,user}:any){const transition=async(id:string,to:string)=>{await api(`/api/referrals/${id}/transition`,{method:'POST',body:JSON.stringify({to})});await refresh()};return <><PageTitle eyebrow="CAREPATH JOURNEY" title={`Referrals (${referrals.length})`} desc="Governed cross-facility hand-offs with outcome follow-through."/><div className="toolbar"><button className={filter==='all'?'active':''} onClick={()=>setFilter('all')}>All visible</button><button className={filter==='stale'?'active':''} onClick={()=>setFilter('stale')}>Waiting &gt;24h</button></div><Panel title="Referral queue"><div className="table-wrap"><table><thead><tr><th>Patient</th><th>Service</th><th>From</th><th>Destination</th><th>Status</th><th>Outcome</th><th>Age</th><th>Action</th></tr></thead><tbody>{referrals.map((r:any)=><tr key={r.id}><td><b>{r.patientName}</b><small>{r.id}</small></td><td>{r.service}<small>{r.priority}</small></td><td>{r.sourceFacilityName}</td><td>{r.destinationFacilityName}</td><td><Status status={r.status}/></td><td>{r.outcome?<Outcome outcome={r.outcome}/>:<span className="muted">Not recorded</span>}</td><td>{age(r.updatedAt)}</td><td>{user.role==='CLINICIAN'&&r.status==='DRAFT'?<button onClick={()=>transition(r.id,'SUBMITTED')}>Submit</button>:['COORDINATOR','SPECIALIST','ADMIN'].includes(user.role)&&r.status==='SUBMITTED'?<button onClick={()=>transition(r.id,'RECEIVED')}>Receive</button>:<span className="muted">Governed</span>}</td></tr>)}</tbody></table></div></Panel></>}
 
-function Facilities({facilities}:any){return <><PageTitle eyebrow="CAREPATH EXCHANGE" title="Facilities & services" desc="Configured synthetic facilities for interoperability and routing demonstrations."/><div className="cards-grid">{facilities.map((f:any)=><div className="facility-card" key={f.id}><span className={`facility-type ${f.type.toLowerCase()}`}>{f.type}</span><h3>{f.name}</h3><p>{f.district}, {f.province}</p><div className="tags">{f.services.map((s:string)=><span key={s}>{s}</span>)}</div><small>Demo/configured record — not live capacity data</small></div>)}</div></>}
-function Audit({events}:any){return <><PageTitle eyebrow="GOVERNANCE" title="Audit & provenance" desc="Who did what, when, through which channel, and with what outcome."/><Panel title="Audit events"><div className="audit-list">{events.map((a:any)=><div className="audit-row" key={a.id}><span className={`outcome ${a.outcome.toLowerCase()}`}>{a.outcome}</span><div><b>{a.action}</b><span>{a.objectType} • {a.objectId}</span></div><div><b>{a.actor}</b><span>{a.source}</span></div><small>{formatTime(a.at)}</small></div>)}</div></Panel></>}
+function Outcomes({data}:any){if(!data)return <Empty message="Loading referral outcome analytics…"/>;return <><PageTitle eyebrow="REFERRAL OUTCOMES" title="Observed referral outcomes" desc="Synthetic cross-hospital follow-through designed to support referral-network learning — not raw hospital ranking."/><div className="methodology"><b>Important interpretation note</b><p>{data.disclaimer}</p><small>{data.methodology}</small></div><div className="outcome-grid">{data.facilities.map((f:any)=><div className="outcome-card" key={f.facilityId}><header><div><span>{f.type}</span><h3>{f.facilityName}</h3></div><div className="signal"><b>{f.favourableObservedPct??'—'}%</b><small>observed favourable*</small></div></header><div className="outcome-kpis"><div><b>{f.referred}</b><span>referred</span></div><div><b>{f.recovered}</b><span>recovered</span></div><div><b>{f.improved}</b><span>improved</span></div><div><b>{f.deceased}</b><span>deceased</span></div><div><b>{f.ongoing}</b><span>ongoing</span></div></div><div className="stacked-bar"><i style={{width:`${f.referred?f.recovered/f.referred*100:0}%`}} className="recovered"/><i style={{width:`${f.referred?f.improved/f.referred*100:0}%`}} className="improved"/><i style={{width:`${f.referred?f.deceased/f.referred*100:0}%`}} className="deceased"/><i style={{width:`${f.referred?f.ongoing/f.referred*100:0}%`}} className="ongoing"/></div><footer><span>Median acknowledgement: <b>{f.medianAckHours??'—'}h</b></span><span>Outcomes recorded: <b>{f.outcomesRecorded}</b></span></footer></div>)}</div><p className="footnote">* Favourable = recovered + improved among resolved synthetic outcomes. Production referral decisions require validated outcome definitions, risk adjustment, confidence intervals, case complexity and governance review.</p></>}
 
-function Ayanda({ language, setLanguage, onNavigate, onOpenPatient, onFilter, onChanged}:any){
-  const [open,setOpen]=useState(false); const [input,setInput]=useState(''); const [messages,setMessages]=useState<any[]>([{who:'ai',text:'Sawubona. I’m Ayanda. I can help you navigate CarePath, inspect authorised synthetic records and propose governed workflow actions.'}]); const [pending,setPending]=useState<any>(null); const [listening,setListening]=useState(false); const speechRef=useRef<any>(null);
-  const speak=(text:string)=>{ if(!('speechSynthesis' in window))return; window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang=language; window.speechSynthesis.speak(u); };
-  const send=async(text=input,source='TEXT')=>{ if(!text.trim())return; setMessages(m=>[...m,{who:'user',text}]); setInput(''); try{const r=await api('/api/ayanda',{method:'POST',body:JSON.stringify({input:text,source:source==='VOICE'?'VOICE':'AI'})}); setMessages(m=>[...m,{who:'ai',text:r.text}]); if(r.navigate)onNavigate(r.navigate); if(r.patientId)onOpenPatient(r.patientId); if(r.filter)onFilter(r.filter); if(r.confirmationRequired)setPending(r.proposedAction); speak(r.text);}catch(e:any){setMessages(m=>[...m,{who:'ai',text:e.message}]);}};
-  const confirm=async()=>{const r=await api('/api/ayanda/execute',{method:'POST',body:JSON.stringify({confirmed:true,action:pending})});setPending(null);setMessages(m=>[...m,{who:'ai',text:r.text}]);onChanged();speak(r.text)};
-  const listen=()=>{ const SR=(window as any).SpeechRecognition||(window as any).webkitSpeechRecognition; if(!SR){setMessages(m=>[...m,{who:'ai',text:'Voice recognition is not available in this browser. Text chat remains available.'}]);return;} if(speechRef.current){speechRef.current.stop();return;} const rec=new SR();speechRef.current=rec;rec.lang=language;rec.interimResults=false;rec.continuous=false;rec.onstart=()=>setListening(true);rec.onend=()=>{setListening(false);speechRef.current=null};rec.onerror=()=>{setListening(false);speechRef.current=null};rec.onresult=(e:any)=>{const t=e.results[0][0].transcript;setInput(t);send(t,'VOICE')};rec.start(); };
-  return <><button className={`ayanda-launcher ${open?'open':''}`} onClick={()=>setOpen(!open)}><img src="/carepath-mark.svg" alt=""/><span>Ayanda</span></button>{open&&<aside className="ayanda-panel"><header><div><b>Ayanda</b><span>CarePath AI assistant</span></div><select value={language} onChange={e=>setLanguage(e.target.value)}>{languages.map(([v,l])=><option value={v} key={v}>{l}</option>)}</select></header><div className="assistant-safety">Administrative and information support only — clinical decisions remain with authorised professionals.</div><div className="messages">{messages.map((m,i)=><div key={i} className={`message ${m.who}`}>{m.text}</div>)}</div>{pending&&<div className="confirmation"><b>Confirmation required</b><p>This will create a referral draft through a governed server-side tool.</p><div><button onClick={()=>setPending(null)}>Cancel</button><button className="primary" onClick={confirm}>Confirm</button></div></div>}<div className="composer"><button className={listening?'listening':''} onClick={listen} aria-label="Voice input">{listening?'■':'◉'}</button><input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==='Enter')send()}} placeholder='Try “Hey Ayanda, open Thandi Mokoena”'/><button className="send" onClick={()=>send()}>Send</button></div></aside>}</>;
-}
+function CareGaps({data,onOpen}:any){if(!data)return <Empty message="Loading care gaps…"/>;return <><PageTitle eyebrow="CONTINUITY" title={`Care Gaps (${data.gaps.length})`} desc={data.definition}/><div className="gap-grid">{data.gaps.map((g:any)=><button className="gap-card" key={g.id} onClick={()=>onOpen(g.patientId)}><span className={`severity ${g.severity.toLowerCase()}`}>{g.severity}</span><div><b>{g.patientName}</b><small>{g.type.replaceAll('_',' ')}</small><p>{g.detail}</p><em>{g.action}</em></div><span>›</span></button>)}</div></>}
 
-function Metric({label,value,icon,warn,critical}:any){return <div className={`metric ${warn?'warn':''} ${critical?'critical':''}`}><span className="metric-icon">{icon}</span><div><b>{value}</b><span>{label}</span></div></div>}
-function Status({status}:any){return <span className={`status s-${String(status).toLowerCase()}`}>{String(status).replaceAll('_',' ')}</span>}
+function Facilities({facilities}:any){return <><PageTitle eyebrow="CAREPATH EXCHANGE" title={`Facilities & services (${facilities.length})`} desc="Configured public, private, laboratory and pharmacy endpoints for the synthetic interoperability network."/><div className="cards-grid">{facilities.map((f:any)=><div className="facility-card" key={f.id}><span className={`facility-type ${f.type.toLowerCase()}`}>{f.type}</span><h3>{f.name}</h3><p>{f.district}, {f.province}</p><div className="tags">{f.services.map((s:string)=><span key={s}>{s}</span>)}</div><small>Demo/configured — not live capacity data</small></div>)}</div></>}
+
+function HealthPassport({data,user}:any){const[share,setShare]=useState<any>(null);if(!data)return <Empty message="No authorised Health Passport patient is available for this role."/>;const p=data.patient;const createShare=async()=>{setShare(await api(`/api/passport/${p.id}/share`,{method:'POST'}))};return <><PageTitle eyebrow="CAREPATH HEALTH PASSPORT" title={`${p.firstName} ${p.surname}`} desc="A patient-facing portable view of the synthetic health record."/><div className="passport-layout"><section className="passport-card"><header><Avatar p={p} large/><div><b>{p.firstName} {p.surname}</b><span>{p.syntheticId}</span></div><span className="verified">✓ Synthetic</span></header><div className="passport-sections"><div><span>Allergies</span><b>{p.allergies.length?p.allergies.map((x:any)=>x.label).join(', '):'None recorded'}</b></div><div><span>Medication</span><b>{p.medications.map((x:any)=>x.label).join(', ')||'None recorded'}</b></div><div><span>Conditions</span><b>{p.conditions.map((x:any)=>x.label).join(', ')||'None recorded'}</b></div><div><span>Referrals</span><b>{data.referrals.length} visible</b></div></div>{['PATIENT','ADMIN'].includes(user.role)&&<button className="primary share" onClick={createShare}>Generate one-time demo share code</button>}{share&&<div className="share-code"><small>Demo-only share code</small><b>{share.token}</b><span>Expires {formatTime(share.expiresAt)} • no live external sharing occurs</span></div>}</section><Panel title="My care journey">{data.referrals.map((r:any)=><div className="passport-ref" key={r.id}><div><b>{r.service}</b><span>{r.destinationFacilityName}</span></div><Status status={r.status}/>{r.outcome&&<Outcome outcome={r.outcome}/>}</div>)}</Panel></div></>}
+
+function Audit({events}:any){return <><PageTitle eyebrow="GOVERNANCE" title="Audit & provenance" desc="Access, changes, AI actions and denied events remain attributable."/><Panel title="Audit events"><div className="audit-list">{events.map((a:any)=><div className="audit-row" key={a.id}><span className={`outcome-status ${a.outcome.toLowerCase()}`}>{a.outcome}</span><div><b>{a.action}</b><span>{a.objectType} • {a.objectId}</span></div><div><b>{a.actor}</b><span>{a.source}</span></div><small>{formatTime(a.at)}</small></div>)}</div></Panel></>}
+
+function Admin(){const[settings,setSettings]=useState<any>(null);const[users,setUsers]=useState<any[]>([]);const[key,setKey]=useState('');const[msg,setMsg]=useState('');useEffect(()=>{Promise.all([api('/api/admin/openai-settings'),api('/api/admin/users')]).then(([s,u])=>{setSettings(s);setUsers(u.users)}).catch(e=>setMsg(e.message))},[]);if(!settings)return <Empty message={msg||'Loading administration…'}/>;const save=async()=>{try{const body={...settings,apiKey:key||undefined};const next=await api('/api/admin/openai-settings',{method:'PUT',body:JSON.stringify(body)});setSettings(next);setKey('');setMsg('Settings saved. API keys are never returned to the browser.')}catch(e:any){setMsg(e.message)}};const test=async()=>{try{const r=await api('/api/admin/openai-settings/test',{method:'POST'});setMsg(r.message)}catch(e:any){setMsg(e.message)}};return <><PageTitle eyebrow="ADMINISTRATION" title="Admin & AI settings" desc="Configure the optional OpenAI connection and review seeded user types."/><div className="admin-grid"><Panel title="OpenAI API settings"><div className="settings-form"><label><span>Enable OpenAI fallback</span><input type="checkbox" checked={settings.enabled} onChange={e=>setSettings({...settings,enabled:e.target.checked})}/></label><label><span>Model</span><input value={settings.model} onChange={e=>setSettings({...settings,model:e.target.value})}/></label><label><span>Base URL</span><input value={settings.baseUrl} onChange={e=>setSettings({...settings,baseUrl:e.target.value})}/></label><label><span>API key</span><input type="password" value={key} placeholder={settings.hasApiKey?'Configured — enter to replace':'Enter API key'} onChange={e=>setKey(e.target.value)}/></label><label><span>Allow synthetic demo context</span><input type="checkbox" checked={settings.allowSyntheticDemoData} onChange={e=>setSettings({...settings,allowSyntheticDemoData:e.target.checked})}/></label><div className="settings-warning">Never enter real patient data or production secrets into this hackathon environment. Production use requires approved legal, privacy, security and contractual controls.</div><div className="button-row"><button className="primary" onClick={save}>Save settings</button><button onClick={test}>Test connection</button></div>{msg&&<div className="settings-message">{msg}</div>}</div></Panel><Panel title="Demo user types"><div className="role-list">{users.map((u:any)=><div key={u.id}><b>{u.displayName}</b><span>{roleNames[u.role]||u.role}</span><small>{u.facilityId||'Cross-facility / own-record scope'}</small></div>)}</div></Panel></div></>}
+
+function Ayanda({language,setLanguage,onNavigate,onOpenPatient,onFilter,onChanged}:any){const[open,setOpen]=useState(false);const[input,setInput]=useState('');const[messages,setMessages]=useState<any[]>([{role:'ai',text:'Sawubona. I’m Ayanda. I can navigate CarePath, open authorised patient records, explain referral outcomes, surface care gaps and propose governed referral drafts.'}]);const[pending,setPending]=useState<any>(null);const[busy,setBusy]=useState(false);const recognitionRef=useRef<any>(null);const speak=(text:string)=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=language;speechSynthesis.speak(u)}catch{}};const send=async(text=input,source='TEXT')=>{if(!text.trim()||busy)return;setInput('');setBusy(true);setMessages(m=>[...m,{role:'user',text}]);try{const r=await api('/api/ayanda',{method:'POST',body:JSON.stringify({input:text,source:source==='VOICE'?'VOICE':'AI'})});setMessages(m=>[...m,{role:'ai',text:r.text,provider:r.provider}]);if(r.navigate)onNavigate(r.navigate);if(r.patientId)await onOpenPatient(r.patientId);if(r.filter)onFilter(r.filter);if(r.confirmationRequired)setPending(r.proposedAction);speak(r.text)}catch(e:any){setMessages(m=>[...m,{role:'ai',text:`I couldn't complete that: ${e.message}`}])}finally{setBusy(false)}};const confirm=async()=>{if(!pending)return;setBusy(true);try{const r=await api('/api/ayanda/execute',{method:'POST',body:JSON.stringify({action:pending,confirmed:true})});setMessages(m=>[...m,{role:'ai',text:r.text}]);setPending(null);onChanged()}catch(e:any){setMessages(m=>[...m,{role:'ai',text:e.message}])}finally{setBusy(false)}};const voice=()=>{const SR=(window as any).SpeechRecognition||(window as any).webkitSpeechRecognition;if(!SR){setMessages(m=>[...m,{role:'ai',text:'Voice recognition is not available in this browser. You can still type your request.'}]);return}speechSynthesis.cancel();recognitionRef.current?.abort?.();const r=new SR();recognitionRef.current=r;r.lang=language;r.interimResults=false;r.onresult=(e:any)=>send(e.results[0][0].transcript,'VOICE');r.start()};const close=()=>{speechSynthesis.cancel();recognitionRef.current?.abort?.();setOpen(false)};if(!open)return <button className="ayanda-launcher" onClick={()=>setOpen(true)}><img src="/carepath-mark.svg" alt=""/><span>Ask Ayanda</span></button>;return <section className="ayanda-panel"><header><div><b>Ayanda</b><span>CarePath AI assistant</span></div><div className="chat-head-actions"><select value={language} onChange={e=>setLanguage(e.target.value)}>{languages.map(([v,l])=><option key={v} value={v}>{l}</option>)}</select><button title="Clear conversation" onClick={()=>setMessages([{role:'ai',text:'Conversation cleared. How can I help with CarePath?'}])}>↻</button><button className="chat-exit" title="Close Ayanda" onClick={close}>×</button></div></header><div className="assistant-safety">Administrative and record-navigation assistance only • no autonomous diagnosis or treatment</div><div className="suggestions"><button onClick={()=>send('Open Thandi Mokoena')}>Open Thandi</button><button onClick={()=>send('Show referral outcomes')}>Referral outcomes</button><button onClick={()=>send('Show referrals waiting more than 24 hours')}>Overdue referrals</button><button onClick={()=>send('Open Care Gaps')}>Care gaps</button></div><div className="messages">{messages.map((m,i)=><div key={i} className={`message ${m.role}`}><span>{m.text}</span>{m.provider&&<small>via {m.provider}</small>}</div>)}{busy&&<div className="message ai typing">Ayanda is working…</div>}</div>{pending&&<div className="confirmation"><b>Confirm governed action?</b><span>This will create a synthetic referral draft only.</span><div><button className="primary" onClick={confirm}>Confirm</button><button onClick={()=>setPending(null)}>Cancel</button></div></div>}<div className="chat-input"><button className="voice" onClick={voice} title="Voice command">◉</button><input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==='Enter')send()}} placeholder="Ask Ayanda…"/><button className="send" onClick={()=>send()}>➤</button></div></section>}
+
+function Metric({label,value,icon,warn,critical,good}:any){return <div className={`metric ${warn?'warn':''} ${critical?'critical':''} ${good?'good':''}`}><span className="metric-icon">{icon}</span><div><b>{value??'—'}</b><span>{label}</span></div></div>}
 function Panel({title,children,action}:any){return <section className="panel"><header><h2>{title}</h2>{action}</header><div>{children}</div></section>}
-function PageTitle({eyebrow,title,desc}:any){return <section className="page-title"><span className="eyebrow">{eyebrow}</span><h1>{title}</h1><p>{desc}</p></section>}
+function PageTitle({eyebrow,title,desc}:any){return <div className="page-title"><span className="eyebrow">{eyebrow}</span><h1>{title}</h1><p>{desc}</p></div>}
+function Status({status}:any){return <span className={`status s-${String(status).toLowerCase()}`}>{String(status).replaceAll('_',' ')}</span>}
+function Outcome({outcome}:any){return <span className={`care-outcome o-${String(outcome).toLowerCase()}`}>{String(outcome).replaceAll('_',' ')}</span>}
+function Avatar({p,large}:any){return <div className={`avatar ${large?'large':''}`}>{p.firstName?.[0]}{p.surname?.[0]}</div>}
 function Empty({message}:any){return <div className="empty">{message}</div>}
-const age=(iso:string)=>{const h=Math.max(0,Math.floor((Date.now()-Date.parse(iso))/3600000));return h<24?`${h}h`:`${Math.floor(h/24)}d ${h%24}h`};
-const formatTime=(iso:string)=>new Date(iso).toLocaleString('en-ZA',{dateStyle:'medium',timeStyle:'short'});
-const formatDate=(iso:string)=>new Date(iso).toLocaleDateString('en-ZA',{dateStyle:'medium'});
+function age(iso:string){const h=Math.max(0,Math.floor((Date.now()-Date.parse(iso))/3600000));return h<24?`${h}h`:`${Math.floor(h/24)}d ${h%24}h`}
+function formatDate(iso:string){return new Date(iso).toLocaleDateString('en-ZA',{year:'numeric',month:'short',day:'numeric'})}
+function formatTime(iso:string){return new Date(iso).toLocaleString('en-ZA',{dateStyle:'medium',timeStyle:'short'})}
 
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
