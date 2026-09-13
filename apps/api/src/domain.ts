@@ -27,7 +27,9 @@ export function canTransition(from: ReferralStatus, to: ReferralStatus) {
   return transitions[from]?.includes(to) ?? false;
 }
 
-export type Role = 'ADMIN' | 'CLINICIAN' | 'COORDINATOR' | 'MANAGER' | 'AUDITOR';
+export type Role =
+  | 'ADMIN' | 'CLINICIAN' | 'SPECIALIST' | 'NURSE' | 'COORDINATOR'
+  | 'PHARMACIST' | 'LAB_TECH' | 'PATIENT_NAVIGATOR' | 'MANAGER' | 'AUDITOR' | 'PATIENT';
 
 export interface DemoUser {
   id: string;
@@ -35,6 +37,7 @@ export interface DemoUser {
   displayName: string;
   role: Role;
   facilityId: string | null;
+  patientId?: string;
   passwordHash: string;
 }
 
@@ -83,6 +86,8 @@ export interface ReferralEvent {
   source: 'UI' | 'VOICE' | 'AI' | 'SYSTEM';
 }
 
+export type CareOutcome = 'RECOVERED' | 'IMPROVED' | 'ONGOING' | 'DECEASED' | 'UNKNOWN';
+
 export interface Referral {
   id: string;
   patientId: string;
@@ -96,6 +101,10 @@ export interface Referral {
   createdAt: string;
   updatedAt: string;
   appointmentAt?: string;
+  acknowledgedAt?: string;
+  outcome?: CareOutcome;
+  outcomeAt?: string;
+  outcomeNote?: string;
   events: ReferralEvent[];
 }
 
@@ -109,4 +118,12 @@ export interface AuditEvent {
   source: 'UI' | 'VOICE' | 'AI' | 'SYSTEM';
   outcome: 'SUCCESS' | 'DENIED';
   reason?: string;
+}
+
+export interface OpenAISettings {
+  enabled: boolean;
+  model: string;
+  baseUrl: string;
+  hasApiKey: boolean;
+  allowSyntheticDemoData: boolean;
 }
