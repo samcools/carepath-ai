@@ -36,6 +36,31 @@ export async function answerAyanda(input: string, ctx: AyandaContext) {
     const items = ctx.referrals.filter(r => r.patientId === patient.id);
     return { intent:'PATIENT_REFERRALS', navigate:'referrals', text:`${patientLabel(patient)} has ${items.length} visible synthetic referral${items.length===1?'':'s'} in your authorised scope.` };
   }
+
+  // v0.5 federated-platform navigation. v05View is handled by the browser
+  // bridge and intentionally remains separate from the original React View enum.
+  if (q.includes('my workspace') || q.includes('professional workspace') || q.includes('clinical workspace') || q.includes('worklist')) {
+    return { intent:'OPEN_V05_WORKSPACE', v05View:'workspace', text:'Opening the Healthcare Professional Workspace with authorised tasks, hand-offs, referrals, appointments and follow-up items.' };
+  }
+  if (q.includes('break glass') || q.includes('emergency access') || q.includes('emergency patient')) {
+    return { intent:'OPEN_V05_EMERGENCY', v05View:'emergency', text:'Opening Emergency Patient Access. Break Glass requires a specific reason, demo re-authentication, minimum-necessary access and creates a high-visibility audit event.' };
+  }
+  if (q.includes('consent') || q.includes('identity centre') || q.includes('patient identity') || q.includes('mpi') || q.includes('master patient')) {
+    return { intent:'OPEN_V05_IDENTITY', v05View:'identity', text:'Opening Consent & Identity. CarePath uses a federated identity/MPI abstraction and preserves source identifiers rather than inventing a competing national patient number.' };
+  }
+  if (q.includes('carepath watch') || q.includes('early warning') || q.includes('sla breach') || q.includes('pathway risk')) {
+    return { intent:'OPEN_V05_WATCH', v05View:'watch', text:'Opening CarePath Watch. It explains operational pathway risks such as overdue referrals, missed appointments, missing feedback and capacity constraints. These are workflow findings, not diagnoses.' };
+  }
+  if (q.includes('population health') || q.includes('population intelligence') || q.includes('health authority')) {
+    return { intent:'OPEN_V05_POPULATION', v05View:'population', text:'Opening Population Health Intelligence with aggregated and appropriately de-identified synthetic operational information.' };
+  }
+  if (q.includes('national command') || q.includes('provincial command') || q.includes('province view') || q.includes('district view')) {
+    return { intent:'OPEN_V05_COMMAND', v05View:'commandv05', text:'Opening the hierarchical CarePath Command Centre for national, provincial, district and facility operational drill-down.' };
+  }
+  if (q.includes('fhir') || q.includes('interoperability') || q.includes('exchange gateway') || q.includes('source system')) {
+    return { intent:'OPEN_V05_EXCHANGE', v05View:'exchange', text:'Opening CarePath Exchange. The demonstrator shows mock source adapters and FHIR R4-style resources while clearly avoiding claims of live national integration or formal profile certification.' };
+  }
+
   if ((q.includes('waiting') || q.includes('stale') || q.includes('overdue')) && (q.includes('24') || q.includes('day'))) {
     const stale = ctx.referrals.filter(r => ['SUBMITTED','RECEIVED','INFO_REQUESTED'].includes(r.status) && Date.now() - Date.parse(r.updatedAt) > 24*3600000);
     return { intent:'FILTER_STALE_REFERRALS', navigate:'referrals', filter:'stale', text:`${stale.length} visible referral${stale.length===1?'':'s'} have been waiting more than 24 hours.` };
@@ -82,5 +107,5 @@ export async function answerAyanda(input: string, ctx: AyandaContext) {
 
   const modelText = await openAIFallback(input);
   if (modelText) return { intent:'OPENAI_FALLBACK', provider:'OpenAI', text:modelText };
-  return { intent:'HELP', text:'I can open patient records, explain allergies or medication, show overdue referrals, open the Appointment Management Centre, show synthetic bed and ambulance availability, open transfer management, notifications, Medication & Vaccine Management, Referral Outcomes, Care Gaps, Health Passport or the Mobile App Preview, and propose a governed referral draft.' };
+  return { intent:'HELP', text:'I can open authorised patient records, appointments, notifications, medication and vaccines, facilities, hospital capacity, ambulances, transfers, Health Passport and referral outcomes. In CarePath v0.5 I can also open My Workspace, Emergency Break Glass, Consent & Identity, CarePath Watch, the hierarchical National Command Centre, Population Health Intelligence and the FHIR-style Exchange Gateway.' };
 }
