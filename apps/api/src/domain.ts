@@ -72,6 +72,7 @@ export interface Facility {
   type: 'PUBLIC' | 'PRIVATE' | 'LAB' | 'PHARMACY';
   province: string;
   district: string;
+  city: string;
   services: string[];
   demo: true;
 }
