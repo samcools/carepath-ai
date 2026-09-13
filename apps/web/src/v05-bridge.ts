@@ -1,3 +1,5 @@
+export {};
+
 type AyandaV05Response = { v05View?: string };
 type SessionUser = { role: string };
 
@@ -49,8 +51,6 @@ async function applyRoleVisibility() {
 
       document.querySelectorAll<HTMLButtonElement>('.v05-nav button[data-v05]').forEach(button => {
         const view = button.dataset.v05;
-        // Managers and auditors default to aggregated/de-identified views; they
-        // should not be invited into patient identity/consent browsing.
         if ((role === 'MANAGER' || role === 'AUDITOR') && view === 'identity') button.hidden = true;
         else if (role === 'AUDITOR' && view === 'watch') button.hidden = true;
         else if (role === 'PATIENT' && (view === 'watch' || view === 'exchange')) button.hidden = true;
@@ -77,9 +77,6 @@ document.addEventListener('change', event => {
   }
 });
 
-// The v0.5 module loads while the login screen may still be visible. Detect the
-// authenticated application shell appearing after login and initialise the
-// v0.5 role-aware navigation without requiring a page refresh.
 const observer = new MutationObserver(() => {
   const shellPresent = Boolean(document.querySelector('.app-shell'));
   if (shellPresent && !lastShellPresent) notifySessionChange();
