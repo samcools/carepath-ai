@@ -29,11 +29,14 @@ Demonstrate how AI, workflow automation, interoperable health-data concepts, mul
 
 ## Repository status
 
-This repository is the canonical source of truth for CarePath AI. Product requirements, architecture, governance, demo flows and implementation instructions are maintained in `/docs` and `MASTER_BUILD_PROMPT.md`.
+This repository is the canonical source of truth for CarePath AI. Product requirements, architecture, governance, demo flows and implementation instructions are maintained in `/docs`.
+
+## Canonical master prompt
+
+- [`docs/prompts/CAREPATH-MASTER-PROMPT.md`](docs/prompts/CAREPATH-MASTER-PROMPT.md) — complete Project Guardian-derived implementation directive and source of truth.
 
 ## Initial documentation
 
-- [`MASTER_BUILD_PROMPT.md`](MASTER_BUILD_PROMPT.md)
 - [`docs/PRODUCT_REQUIREMENTS.md`](docs/PRODUCT_REQUIREMENTS.md)
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 - [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md)
