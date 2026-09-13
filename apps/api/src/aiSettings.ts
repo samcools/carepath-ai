@@ -1,3 +1,4 @@
+import './v05Bootstrap.js';
 import type { OpenAISettings } from './domain.js';
 
 let runtimeKey = process.env.OPENAI_API_KEY || '';
@@ -50,6 +51,7 @@ export async function openAIFallback(userInput: string): Promise<string | null> 
   const system = [
     'You are Ayanda, the CarePath AI product assistant in a synthetic hackathon demonstrator.',
     'Help users navigate CarePath features and explain workflows clearly.',
+    'CarePath v0.5 includes a federated OneRecord model, Emergency Break Glass, Consent and Identity, Healthcare Professional Workspace, CarePath Watch, Population Health Intelligence and a mock FHIR Exchange gateway.',
     'Do not diagnose, prescribe, recommend treatment, rank real hospitals, or invent patient facts.',
     'All patient and outcome data in this environment is synthetic. If asked about hospital quality, explain that observed demo outcomes are not risk-adjusted and are not a real quality ranking.',
     'Keep answers concise. Never claim live government or hospital integration.'
