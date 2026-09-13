@@ -1,0 +1,204 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ConsentStatus { ACTIVE REVOKED EXPIRED }
+enum TaskStatus { OPEN IN_PROGRESS DONE }
+enum TaskPriority { LOW MEDIUM HIGH }
+enum BreakGlassStatus { ACTIVE EXPIRED REVOKED }
+
+model Patient {
+  id                String              @id @default(uuid())
+  syntheticId       String?             @unique
+  firstName         String
+  surname           String
+  dateOfBirth       DateTime
+  preferredLanguage String?
+  phone             String?
+  isSynthetic       Boolean             @default(false)
+  identifiers       PatientIdentifier[]
+  consents          ConsentRecord[]
+  breakGlassEvents  BreakGlassEvent[]
+  carePlans         CarePlan[]
+  documents         ClinicalDocument[]
+  tasks             CareTask[]
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  @@index([surname, firstName, dateOfBirth])
+}
+
+model PatientIdentifier {
+  id             String   @id @default(uuid())
+  patientId      String
+  patient        Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  sourceSystem   String
+  sourceOrg      String?
+  identifierType String
+  value          String
+  authoritative  Boolean  @default(false)
+  status         String   @default("ACTIVE")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([sourceSystem, value])
+  @@index([patientId])
+}
+
+model ConsentRecord {
+  id                    String        @id @default(uuid())
+  patientId             String
+  patient               Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  purpose               String
+  status                ConsentStatus @default(ACTIVE)
+  shareWithCareTeam     Boolean       @default(true)
+  allowPatientMessaging Boolean       @default(true)
+  allowCaregiverProxy   Boolean       @default(false)
+  effectiveAt           DateTime      @default(now())
+  expiresAt             DateTime?
+  revokedAt             DateTime?
+  provenance            Json?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  @@index([patientId, status])
+}
+
+model BreakGlassEvent {
+  id          String           @id @default(uuid())
+  patientId   String
+  patient     Patient          @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  userId      String
+  facilityId  String?
+  reason      String
+  status      BreakGlassStatus @default(ACTIVE)
+  grantedAt   DateTime         @default(now())
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  reviewedAt  DateTime?
+  reviewedBy  String?
+  auditDigest String?
+
+  @@index([patientId, grantedAt])
+  @@index([userId, status])
+}
+
+model CarePlan {
+  id            String   @id @default(uuid())
+  patientId     String
+  patient       Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  title         String
+  goal          String
+  ownerUserId   String?
+  ownerFacility String?
+  status        String
+  reviewAt      DateTime?
+  interventions Json
+  provenance    Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([patientId, status])
+}
+
+model ClinicalDocument {
+  id               String   @id @default(uuid())
+  patientId        String
+  patient          Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  documentType     String
+  title            String
+  sourceSystem     String
+  sourceFacilityId String?
+  sourceIdentifier String?
+  status           String
+  recordedAt       DateTime
+  summary          String?
+  externalUri      String?
+  checksum         String?
+  provenance       Json?
+  createdAt        DateTime @default(now())
+
+  @@index([patientId, recordedAt])
+}
+
+model CareTask {
+  id            String       @id @default(uuid())
+  patientId     String?
+  patient       Patient?     @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  referralId    String?
+  title         String
+  detail        String?
+  ownerUserId   String?
+  ownerRole     String?
+  facilityId    String?
+  priority      TaskPriority @default(MEDIUM)
+  status        TaskStatus   @default(OPEN)
+  dueAt         DateTime?
+  source        String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([patientId, status])
+  @@index([facilityId, status, dueAt])
+}
+
+model IntegrationEvent {
+  id             String   @id @default(uuid())
+  sourceSystem   String
+  resourceType   String
+  externalId     String
+  patientId      String?
+  direction      String
+  eventType      String
+  payloadHash    String?
+  status         String
+  correlationId  String
+  occurredAt     DateTime
+  receivedAt     DateTime @default(now())
+  provenance     Json?
+
+  @@index([sourceSystem, resourceType, externalId])
+  @@index([correlationId])
+}
+
+model AccessEvent {
+  id            String   @id @default(uuid())
+  userId        String
+  patientId     String?
+  facilityId    String?
+  purposeOfUse  String
+  action        String
+  objectType    String
+  objectId      String
+  outcome       String
+  correlationId String
+  breakGlassId  String?
+  createdAt     DateTime @default(now())
+
+  @@index([patientId, createdAt])
+  @@index([userId, createdAt])
+}
+
+model AuditEvent {
+  id            String   @id @default(uuid())
+  actorId       String?
+  actorRole     String?
+  facilityId    String?
+  action        String
+  objectType    String
+  objectId      String
+  outcome       String
+  reason        String?
+  sourceChannel String
+  correlationId String
+  metadata      Json?
+  createdAt     DateTime @default(now())
+
+  @@index([objectType, objectId, createdAt])
+  @@index([actorId, createdAt])
+}
