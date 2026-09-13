@@ -1,3 +1,5 @@
+export {};
+
 type DistrictResponse={province?:string;name?:string;metrics?:{facilities:number;openReferrals:number;availableBeds:number};facilities?:Array<{id:string;name:string;city?:string;type:string;services:string[];availableBeds:number}>};
 const request=async(path:string)=>{const r=await fetch(path,{credentials:'include'});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);return b as DistrictResponse};
 const escapeHtml=(v:unknown)=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]||c));
