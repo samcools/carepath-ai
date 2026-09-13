@@ -1,63 +1,90 @@
-# CarePath AI
+# CarePath AI by Pyrneo
+
+**One Patient. One Journey. One Trusted Health Record.**
 
 **From Referral to Care — Without Losing the Patient in Between.**
 
-CarePath AI is a Pyrneo-branded, AI-enabled public healthcare referral, patient-navigation and care-coordination platform for South Africa. It is designed to help authorised healthcare teams create, route, accept, track and close referrals while maintaining a complete patient-journey timeline, operational visibility and auditable accountability.
+CarePath AI is a Pyrneo-branded hackathon prototype for longitudinal health records, public/private interoperability, referral orchestration, patient navigation, multilingual AI assistance and accountable digital-health workflows.
 
-> **Clinical safety boundary:** CarePath AI coordinates care. It does **not** autonomously diagnose patients, prescribe treatment, override clinicians, or make unsupervised clinical-risk decisions.
+> **Clinical safety boundary:** CarePath coordinates care and authorised information access. It does not autonomously diagnose, prescribe, override clinicians or replace clinical judgement.
 
-## Hackathon objective
+## Working v0.1.0
 
-Demonstrate how AI, workflow automation, interoperable health-data concepts, multilingual voice interaction and accountable governance can reduce referral leakage and improve continuity of care across facilities.
+The repository now contains a runnable full-stack demonstrator with:
 
-## Core capabilities
+- CarePath Command Centre
+- CarePath OneRecord synthetic longitudinal patient view
+- source provenance for clinical record elements
+- CarePath Exchange synthetic facility/service directory
+- CarePath Journey referral workflow and server-side state machine
+- stale-referral / leakage detection
+- Ayanda text and browser voice assistant
+- explicit confirmation before AI-assisted write actions
+- facility/role-scoped access checks
+- role-aware audit access
+- synthetic demo data banner and prototype disclaimers
+- responsive desktop, tablet and mobile UX
+- GitHub Actions CI
+- Render deployment scaffold
 
-- Referral Command Centre
-- Digital Referral Workspace
-- Facility & Service Directory
-- Patient Journey Timeline
-- Referral Leakage / Exception Detection
-- Appointment and follow-up coordination
-- Multilingual Ayanda text + voice assistant
-- Operational analytics
-- Human approval for consequential actions
-- Role-based access control (RBAC)
-- Immutable-style audit event history
-- POPIA-aligned privacy and data-minimisation controls
-- FHIR-compatible interoperability architecture
-- Responsive desktop, tablet and mobile UX
+## Quick start
 
-## Repository status
+Prerequisites: Node.js 20+ and npm.
 
-This repository is the canonical source of truth for CarePath AI. Product requirements, architecture, governance, demo flows and implementation instructions are maintained in `/docs`.
+```bash
+npm install
+npm run dev
+```
 
-## Canonical master prompt
+Open:
 
-- [`docs/prompts/CAREPATH-MASTER-PROMPT.md`](docs/prompts/CAREPATH-MASTER-PROMPT.md) — complete Project Guardian-derived implementation directive and source of truth.
+- Web: `http://localhost:5173`
+- API health: `http://localhost:8080/api/health`
 
-## Initial documentation
+## Demo accounts
 
-- [`docs/PRODUCT_REQUIREMENTS.md`](docs/PRODUCT_REQUIREMENTS.md)
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
-- [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md)
-- [`docs/SECURITY_GOVERNANCE.md`](docs/SECURITY_GOVERNANCE.md)
-- [`docs/DEMO_SCENARIO.md`](docs/DEMO_SCENARIO.md)
-- [`docs/IMPLEMENTATION_ROADMAP.md`](docs/IMPLEMENTATION_ROADMAP.md)
+Password for all demo accounts: `CarePath!2026`
 
-## Design principles
+| Username | Role |
+|---|---|
+| `clinician` | Referring clinician |
+| `coordinator` | Receiving coordinator |
+| `manager` | District manager |
+| `auditor` | Audit/compliance |
+| `admin` | Administrator |
 
-1. **Patient-centred:** minimise hand-off failures and make referral status visible.
-2. **Human-accountable AI:** AI recommends, explains and assists; authorised humans approve consequential actions.
-3. **Privacy by design:** collect, expose and retain only the information required for the stated purpose.
-4. **Interoperable by design:** favour standards-aligned APIs and FHIR-compatible resource mappings.
-5. **Explainable operations:** every referral state change should be traceable to actor, time, reason and source.
-6. **Low-latency interaction:** Ayanda should respond quickly and execute permitted commands with visible confirmation.
-7. **Africa-aware accessibility:** multilingual interaction, mobile responsiveness, bandwidth-conscious UX and operational realities of public healthcare facilities.
+All patient, facility and clinical records in this release are synthetic demonstration data.
 
-## Policy context
+## Flagship demo
 
-The South African National Department of Health referral policy identifies gaps in timely referral and patient movement between levels and types of care. In January 2026 the Department of Health, CSIR and IHE Catalyst also convened a Digital Health Interoperability Projectathon focused on secure information exchange, patient-data flow and portable services. CarePath AI is designed to align with that direction while remaining a hackathon prototype unless and until formally validated, integrated and approved for production use.
+1. Sign in as `clinician`.
+2. Open Ayanda.
+3. Ask: **“Hey Ayanda, open Thandi Mokoena.”**
+4. Review her synthetic longitudinal record, including hypertension, amlodipine, penicillin allergy and provenance.
+5. Ask: **“Hey Ayanda, create a referral for Thandi Mokoena to cardiology.”**
+6. Confirm the governed action. Ayanda creates a **draft only**.
+7. Open Referrals and submit the draft as the authorised clinician.
+8. Ask: **“Show referrals waiting more than 24 hours.”**
+9. CarePath filters to the stale referral and shows the operational exception.
+10. Sign in as `auditor` or `manager` and review the audit trail.
 
-## Prototype disclaimer
+## Repository structure
 
-All demonstration patient records must be synthetic. The prototype must not be represented as clinically validated, production deployed, NDoH approved, SAHPRA approved, or integrated with a live health-information system unless such validation, approval or integration has actually occurred.
+```text
+apps/web       React + TypeScript + Vite
+apps/api       Express + TypeScript API
+assets         branding/demo assets (extensible)
+docs           product, architecture, security, demo and master prompt
+.github        CI quality workflow
+render.yaml    live-demo deployment scaffold
+```
+
+## Canonical specification
+
+The implementation source of truth is:
+
+`docs/prompts/CAREPATH-MASTER-PROMPT.md`
+
+## Prototype limitations
+
+This release does **not** claim live NDoH, private hospital, laboratory, pharmacy, HPRS, EMR, HIE or FHIR endpoint integration. It does not claim clinical validation, NDoH approval, SAHPRA approval or production deployment. Formal interoperability certification has not been completed. The v0.1.0 repository uses deterministic in-memory synthetic data; PostgreSQL and live interoperability adapters remain the next production-oriented implementation phase.
