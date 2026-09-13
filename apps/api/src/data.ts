@@ -7,16 +7,23 @@ const isoHoursAgo = (h: number) => new Date(now.getTime() - h * 3600000).toISOSt
 const isoDaysAhead = (d: number, hour = 9) => { const x = new Date(now.getTime() + d * 86400000); x.setHours(hour,0,0,0); return x.toISOString(); };
 
 export const facilities: Facility[] = [
-  { id: 'fac-clinic-1', name: 'Mahlasedi Community Clinic (Demo)', type: 'PUBLIC', province: 'Limpopo', district: 'Capricorn', services: ['Primary Care', 'Chronic Care', 'Referrals'], demo: true },
-  { id: 'fac-clinic-2', name: 'Ubuntu Community Health Centre (Demo)', type: 'PUBLIC', province: 'Gauteng', district: 'Johannesburg', services: ['Primary Care', 'Maternal Health', 'Referrals'], demo: true },
-  { id: 'fac-hosp-1', name: 'Gauteng Cardiac Centre (Demo)', type: 'PRIVATE', province: 'Gauteng', district: 'Johannesburg', services: ['Cardiology', 'Echocardiography', 'Internal Medicine'], demo: true },
-  { id: 'fac-hosp-2', name: 'Tshwane Regional Hospital (Demo)', type: 'PUBLIC', province: 'Gauteng', district: 'Tshwane', services: ['Cardiology', 'Internal Medicine', 'Imaging', 'Surgery'], demo: true },
-  { id: 'fac-hosp-3', name: 'Maponya Specialist Hospital (Demo)', type: 'PRIVATE', province: 'Gauteng', district: 'Johannesburg', services: ['Oncology', 'Neurology', 'Orthopaedics', 'Surgery'], demo: true },
-  { id: 'fac-hosp-4', name: 'Polokwane Academic Hospital (Demo)', type: 'PUBLIC', province: 'Limpopo', district: 'Capricorn', services: ['Internal Medicine', 'Cardiology', 'Neurology', 'Surgery'], demo: true },
-  { id: 'fac-hosp-5', name: 'Midrand Day Hospital (Demo)', type: 'PRIVATE', province: 'Gauteng', district: 'Johannesburg', services: ['General Surgery', 'Orthopaedics', 'Imaging'], demo: true },
-  { id: 'fac-lab-1', name: 'Ubuntu Pathology Network (Demo)', type: 'LAB', province: 'Gauteng', district: 'Johannesburg', services: ['Pathology', 'Haematology', 'Chemistry'], demo: true },
-  { id: 'fac-lab-2', name: 'Limpopo Diagnostics Lab (Demo)', type: 'LAB', province: 'Limpopo', district: 'Capricorn', services: ['Pathology', 'Microbiology', 'Chemistry'], demo: true },
-  { id: 'fac-pharm-1', name: 'CareLink Pharmacy (Demo)', type: 'PHARMACY', province: 'Gauteng', district: 'Johannesburg', services: ['Dispensing', 'Medication Reconciliation'], demo: true }
+  { id: 'fac-clinic-1', name: 'Mahlasedi Community Clinic (Demo)', type: 'PUBLIC', province: 'Limpopo', district: 'Capricorn', city:'Polokwane', services: ['Primary Care', 'Chronic Care', 'Referrals'], demo: true },
+  { id: 'fac-clinic-2', name: 'Ubuntu Community Health Centre (Demo)', type: 'PUBLIC', province: 'Gauteng', district: 'Johannesburg', city:'Johannesburg', services: ['Primary Care', 'Maternal Health', 'Referrals'], demo: true },
+  { id: 'fac-hosp-1', name: 'Gauteng Cardiac Centre (Demo)', type: 'PRIVATE', province: 'Gauteng', district: 'Johannesburg', city:'Johannesburg', services: ['Cardiology', 'Echocardiography', 'Internal Medicine'], demo: true },
+  { id: 'fac-hosp-2', name: 'Tshwane Regional Hospital (Demo)', type: 'PUBLIC', province: 'Gauteng', district: 'Tshwane', city:'Pretoria', services: ['Cardiology', 'Internal Medicine', 'Imaging', 'Surgery', 'Maternity', 'Paediatrics'], demo: true },
+  { id: 'fac-hosp-3', name: 'Maponya Specialist Hospital (Demo)', type: 'PRIVATE', province: 'Gauteng', district: 'Johannesburg', city:'Soweto', services: ['Oncology', 'Neurology', 'Orthopaedics', 'Surgery'], demo: true },
+  { id: 'fac-hosp-4', name: 'Polokwane Academic Hospital (Demo)', type: 'PUBLIC', province: 'Limpopo', district: 'Capricorn', city:'Polokwane', services: ['Internal Medicine', 'Cardiology', 'Neurology', 'Surgery', 'Maternity', 'Paediatrics'], demo: true },
+  { id: 'fac-hosp-5', name: 'Midrand Day Hospital (Demo)', type: 'PRIVATE', province: 'Gauteng', district: 'Johannesburg', city:'Midrand', services: ['General Surgery', 'Orthopaedics', 'Imaging'], demo: true },
+  { id: 'fac-hosp-6', name: 'Gqeberha Coastal Hospital (Demo)', type: 'PUBLIC', province: 'Eastern Cape', district: 'Nelson Mandela Bay', city:'Gqeberha', services: ['Internal Medicine', 'Cardiology', 'Surgery', 'Maternity', 'Paediatrics', 'Imaging'], demo: true },
+  { id: 'fac-hosp-7', name: 'Bloemfontein Central Hospital (Demo)', type: 'PUBLIC', province: 'Free State', district: 'Mangaung', city:'Bloemfontein', services: ['Internal Medicine', 'Cardiology', 'Oncology', 'Surgery', 'Maternity', 'Paediatrics'], demo: true },
+  { id: 'fac-hosp-8', name: 'Durban Bay Specialist Hospital (Demo)', type: 'PRIVATE', province: 'KwaZulu-Natal', district: 'eThekwini', city:'Durban', services: ['Cardiology', 'Neurology', 'Oncology', 'Orthopaedics', 'Surgery', 'Imaging'], demo: true },
+  { id: 'fac-hosp-9', name: 'Mbombela Regional Hospital (Demo)', type: 'PUBLIC', province: 'Mpumalanga', district: 'Ehlanzeni', city:'Mbombela', services: ['Internal Medicine', 'Cardiology', 'Surgery', 'Maternity', 'Paediatrics'], demo: true },
+  { id: 'fac-hosp-10', name: 'Rustenburg Provincial Hospital (Demo)', type: 'PUBLIC', province: 'North West', district: 'Bojanala', city:'Rustenburg', services: ['Internal Medicine', 'Orthopaedics', 'Surgery', 'Maternity', 'Paediatrics'], demo: true },
+  { id: 'fac-hosp-11', name: 'Kimberley Regional Hospital (Demo)', type: 'PUBLIC', province: 'Northern Cape', district: 'Frances Baard', city:'Kimberley', services: ['Internal Medicine', 'Surgery', 'Maternity', 'Paediatrics', 'Imaging'], demo: true },
+  { id: 'fac-hosp-12', name: 'Cape Metro Specialist Hospital (Demo)', type: 'PRIVATE', province: 'Western Cape', district: 'City of Cape Town', city:'Cape Town', services: ['Cardiology', 'Neurology', 'Oncology', 'Orthopaedics', 'Surgery', 'Imaging'], demo: true },
+  { id: 'fac-lab-1', name: 'Ubuntu Pathology Network (Demo)', type: 'LAB', province: 'Gauteng', district: 'Johannesburg', city:'Johannesburg', services: ['Pathology', 'Haematology', 'Chemistry'], demo: true },
+  { id: 'fac-lab-2', name: 'Limpopo Diagnostics Lab (Demo)', type: 'LAB', province: 'Limpopo', district: 'Capricorn', city:'Polokwane', services: ['Pathology', 'Microbiology', 'Chemistry'], demo: true },
+  { id: 'fac-pharm-1', name: 'CareLink Pharmacy (Demo)', type: 'PHARMACY', province: 'Gauteng', district: 'Johannesburg', city:'Johannesburg', services: ['Dispensing', 'Medication Reconciliation'], demo: true }
 ];
 
 export const bedCapacity: BedCapacity[] = [
@@ -26,14 +33,49 @@ export const bedCapacity: BedCapacity[] = [
   { facilityId:'fac-hosp-2', bedType:'GENERAL', staffedBeds:160, occupiedBeds:143, reservedBeds:6, updatedAt:isoHoursAgo(2), synthetic:true },
   { facilityId:'fac-hosp-2', bedType:'HIGH_CARE', staffedBeds:24, occupiedBeds:20, reservedBeds:1, updatedAt:isoHoursAgo(2), synthetic:true },
   { facilityId:'fac-hosp-2', bedType:'ICU', staffedBeds:18, occupiedBeds:17, reservedBeds:1, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-2', bedType:'MATERNITY', staffedBeds:45, occupiedBeds:34, reservedBeds:3, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-2', bedType:'PAEDIATRIC', staffedBeds:36, occupiedBeds:29, reservedBeds:2, updatedAt:isoHoursAgo(2), synthetic:true },
   { facilityId:'fac-hosp-3', bedType:'GENERAL', staffedBeds:75, occupiedBeds:58, reservedBeds:5, updatedAt:isoHoursAgo(1), synthetic:true },
   { facilityId:'fac-hosp-3', bedType:'HIGH_CARE', staffedBeds:16, occupiedBeds:11, reservedBeds:2, updatedAt:isoHoursAgo(1), synthetic:true },
   { facilityId:'fac-hosp-3', bedType:'ICU', staffedBeds:12, occupiedBeds:8, reservedBeds:1, updatedAt:isoHoursAgo(1), synthetic:true },
   { facilityId:'fac-hosp-4', bedType:'GENERAL', staffedBeds:190, occupiedBeds:181, reservedBeds:4, updatedAt:isoHoursAgo(3), synthetic:true },
   { facilityId:'fac-hosp-4', bedType:'HIGH_CARE', staffedBeds:20, occupiedBeds:18, reservedBeds:1, updatedAt:isoHoursAgo(3), synthetic:true },
   { facilityId:'fac-hosp-4', bedType:'ICU', staffedBeds:14, occupiedBeds:14, reservedBeds:0, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-4', bedType:'MATERNITY', staffedBeds:42, occupiedBeds:35, reservedBeds:2, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-4', bedType:'PAEDIATRIC', staffedBeds:34, occupiedBeds:30, reservedBeds:1, updatedAt:isoHoursAgo(3), synthetic:true },
   { facilityId:'fac-hosp-5', bedType:'GENERAL', staffedBeds:38, occupiedBeds:26, reservedBeds:4, updatedAt:isoHoursAgo(1), synthetic:true },
-  { facilityId:'fac-hosp-5', bedType:'HIGH_CARE', staffedBeds:6, occupiedBeds:4, reservedBeds:0, updatedAt:isoHoursAgo(1), synthetic:true }
+  { facilityId:'fac-hosp-5', bedType:'HIGH_CARE', staffedBeds:6, occupiedBeds:4, reservedBeds:0, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-6', bedType:'GENERAL', staffedBeds:145, occupiedBeds:119, reservedBeds:5, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-6', bedType:'HIGH_CARE', staffedBeds:18, occupiedBeds:12, reservedBeds:2, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-6', bedType:'ICU', staffedBeds:12, occupiedBeds:9, reservedBeds:1, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-6', bedType:'MATERNITY', staffedBeds:38, occupiedBeds:27, reservedBeds:2, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-6', bedType:'PAEDIATRIC', staffedBeds:32, occupiedBeds:24, reservedBeds:2, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-7', bedType:'GENERAL', staffedBeds:170, occupiedBeds:142, reservedBeds:5, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-7', bedType:'HIGH_CARE', staffedBeds:20, occupiedBeds:15, reservedBeds:1, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-7', bedType:'ICU', staffedBeds:14, occupiedBeds:11, reservedBeds:1, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-7', bedType:'MATERNITY', staffedBeds:40, occupiedBeds:30, reservedBeds:2, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-7', bedType:'PAEDIATRIC', staffedBeds:35, occupiedBeds:29, reservedBeds:1, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-8', bedType:'GENERAL', staffedBeds:95, occupiedBeds:68, reservedBeds:5, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-8', bedType:'HIGH_CARE', staffedBeds:18, occupiedBeds:12, reservedBeds:2, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-8', bedType:'ICU', staffedBeds:14, occupiedBeds:9, reservedBeds:1, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-9', bedType:'GENERAL', staffedBeds:135, occupiedBeds:111, reservedBeds:4, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-9', bedType:'HIGH_CARE', staffedBeds:16, occupiedBeds:12, reservedBeds:1, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-9', bedType:'ICU', staffedBeds:10, occupiedBeds:8, reservedBeds:0, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-9', bedType:'MATERNITY', staffedBeds:36, occupiedBeds:26, reservedBeds:2, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-9', bedType:'PAEDIATRIC', staffedBeds:28, occupiedBeds:21, reservedBeds:1, updatedAt:isoHoursAgo(2), synthetic:true },
+  { facilityId:'fac-hosp-10', bedType:'GENERAL', staffedBeds:125, occupiedBeds:101, reservedBeds:4, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-10', bedType:'HIGH_CARE', staffedBeds:14, occupiedBeds:10, reservedBeds:1, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-10', bedType:'ICU', staffedBeds:10, occupiedBeds:8, reservedBeds:1, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-10', bedType:'MATERNITY', staffedBeds:34, occupiedBeds:25, reservedBeds:2, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-10', bedType:'PAEDIATRIC', staffedBeds:26, occupiedBeds:19, reservedBeds:1, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-11', bedType:'GENERAL', staffedBeds:105, occupiedBeds:87, reservedBeds:3, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-11', bedType:'HIGH_CARE', staffedBeds:12, occupiedBeds:9, reservedBeds:1, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-11', bedType:'ICU', staffedBeds:8, occupiedBeds:7, reservedBeds:0, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-11', bedType:'MATERNITY', staffedBeds:30, occupiedBeds:22, reservedBeds:1, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-11', bedType:'PAEDIATRIC', staffedBeds:22, occupiedBeds:17, reservedBeds:1, updatedAt:isoHoursAgo(3), synthetic:true },
+  { facilityId:'fac-hosp-12', bedType:'GENERAL', staffedBeds:88, occupiedBeds:61, reservedBeds:4, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-12', bedType:'HIGH_CARE', staffedBeds:16, occupiedBeds:10, reservedBeds:1, updatedAt:isoHoursAgo(1), synthetic:true },
+  { facilityId:'fac-hosp-12', bedType:'ICU', staffedBeds:14, occupiedBeds:9, reservedBeds:1, updatedAt:isoHoursAgo(1), synthetic:true }
 ];
 
 const firstNames = ['Thandi','Lerato','Sipho','Nomsa','Kabelo','Ayanda','Lindiwe','Mpho','Thabo','Zanele','Neo','Busisiwe','Tshepo','Nandi','Karabo','Palesa','Sibusiso','Dineo','Andile','Naledi','Tumelo','Nokuthula','Bongani','Refiloe','Khanyisa','Lesedi','Themba','Boitumelo','Nhlanhla','Precious'];
@@ -69,25 +111,20 @@ function createPatient(i: number): Patient {
 
 export const patients: Patient[] = Array.from({ length: 60 }, (_, i) => createPatient(i));
 
-const hospitalIds = ['fac-hosp-1','fac-hosp-2','fac-hosp-3','fac-hosp-4','fac-hosp-5'];
+const hospitalIds = ['fac-hosp-1','fac-hosp-2','fac-hosp-3','fac-hosp-4','fac-hosp-5','fac-hosp-6','fac-hosp-7','fac-hosp-8','fac-hosp-9','fac-hosp-10','fac-hosp-11','fac-hosp-12'];
 const services = ['Cardiology','Internal Medicine','Neurology','Orthopaedics','Oncology','General Surgery'];
 const bedTypeForService = (service:string): BedType | undefined => service === 'General Surgery' || service === 'Oncology' ? 'GENERAL' : service === 'Cardiology' && Math.random() < 0 ? 'HIGH_CARE' : undefined;
-const outcomesByHospital: Record<string, CareOutcome[]> = {
-  'fac-hosp-1': ['RECOVERED','RECOVERED','IMPROVED','RECOVERED','ONGOING','RECOVERED','IMPROVED','RECOVERED','DECEASED','RECOVERED'],
-  'fac-hosp-2': ['RECOVERED','IMPROVED','ONGOING','RECOVERED','DECEASED','IMPROVED','RECOVERED','ONGOING','DECEASED','RECOVERED'],
-  'fac-hosp-3': ['RECOVERED','RECOVERED','RECOVERED','IMPROVED','RECOVERED','ONGOING','IMPROVED','RECOVERED','RECOVERED','DECEASED'],
-  'fac-hosp-4': ['IMPROVED','RECOVERED','ONGOING','DECEASED','RECOVERED','IMPROVED','ONGOING','RECOVERED','DECEASED','IMPROVED'],
-  'fac-hosp-5': ['RECOVERED','IMPROVED','RECOVERED','RECOVERED','ONGOING','IMPROVED','RECOVERED','RECOVERED','IMPROVED','RECOVERED']
-};
+const outcomePattern: CareOutcome[] = ['RECOVERED','IMPROVED','RECOVERED','ONGOING','RECOVERED','DECEASED','IMPROVED','RECOVERED','ONGOING','RECOVERED'];
+const outcomesByHospital: Record<string, CareOutcome[]> = Object.fromEntries(hospitalIds.map((id,index)=>[id,outcomePattern.map((_,i)=>outcomePattern[(i+index)%outcomePattern.length])])) as Record<string,CareOutcome[]>;
 const closedStatuses: ReferralStatus[] = ['CLOSED','CLOSED','CLOSED','CLOSED','ATTENDED','FEEDBACK_PENDING'];
 
 export const referrals: Referral[] = [];
 let referralCounter = 1001;
-for (let i = 0; i < 45; i++) {
+for (let i = 0; i < 60; i++) {
   const patient = patients[i % patients.length];
   const destination = hospitalIds[i % hospitalIds.length];
   const service = i === 0 ? 'Cardiology' : services[i % services.length];
-  const completed = i < 32;
+  const completed = i < 42;
   const status: ReferralStatus = i === 0 ? 'SUBMITTED' : completed ? closedStatuses[i % closedStatuses.length] : (['SUBMITTED','RECEIVED','ACCEPTED','SCHEDULED','PATIENT_NOTIFIED','MISSED','FOLLOWUP_REQUIRED'] as ReferralStatus[])[i % 7];
   const createdAgo = completed ? 10 + i : 1 + (i % 6);
   const updatedAgoHours = completed ? 4 + i : (status === 'SUBMITTED' && i % 2 === 0 ? 32 + i : 2 + i);
@@ -118,7 +155,7 @@ for (let i = 0; i < 45; i++) {
 
 export const appointments: Appointment[] = referrals
   .filter(r => r.appointmentAt)
-  .slice(0, 12)
+  .slice(0, 20)
   .map((r, i) => ({
     id:`appt-${2001+i}`,
     patientId:r.patientId,
@@ -138,7 +175,7 @@ export const appointments: Appointment[] = referrals
   }));
 
 export const auditEvents: AuditEvent[] = [
-  { id: 'aud-1', at: isoHoursAgo(2), actor: 'System', action: 'demo.seed', objectType: 'Dataset', objectId: 'carepath-v0.3', source: 'SYSTEM', outcome: 'SUCCESS' },
+  { id: 'aud-1', at: isoHoursAgo(2), actor: 'System', action: 'demo.seed', objectType: 'Dataset', objectId: 'carepath-v0.4', source: 'SYSTEM', outcome: 'SUCCESS' },
   { id: 'aud-2', at: isoHoursAgo(4), actor: 'Care Coordinator', action: 'referral.review', objectType: 'Referral', objectId: 'ref-1008', source: 'UI', outcome: 'SUCCESS' },
   { id: 'aud-3', at: isoHoursAgo(7), actor: 'Dr Naledi Dlamini', action: 'patient.read', objectType: 'Patient', objectId: 'pat-thandi', source: 'UI', outcome: 'SUCCESS' }
 ];
