@@ -4,125 +4,116 @@
 
 **From Referral to Care — Without Losing the Patient in Between.**
 
-CarePath AI is a Pyrneo-branded SITA Hackathon demonstrator for a **federated longitudinal health record and accountable patient journey across public and private healthcare**. It preserves source-system provenance and demonstrates how identity, standards-aware exchange, referrals, appointments, capacity, transfers, notifications, care coordination and governed AI can work together without claiming to replace every hospital system.
+CarePath AI is a Pyrneo-branded SITA Hackathon demonstrator for a **federated longitudinal health record and accountable patient journey across public and private healthcare**. It preserves source-system provenance and demonstrates how identity, standards-aware exchange, referrals, appointments, capacity, patient transfer, care coordination and governed AI can operate together without claiming to replace every healthcare source system.
 
-> **Clinical safety boundary:** CarePath coordinates authorised information access and care workflow. It does not autonomously diagnose, prescribe, initiate treatment, override clinicians, or replace clinical judgement.
+> **Clinical safety boundary:** CarePath coordinates authorised information access and care workflow. It does not autonomously diagnose, prescribe, initiate treatment, override clinicians or replace clinical judgement.
 
 ## Live demonstrator
 
 **https://carepath-ai-xdad.onrender.com**
 
-The repository `main` branch is configured for automatic Render deployment. **Do not assume the live URL is running the newest source commit until the deployment commit is verified.** CarePath v0.5 exposes `/api/v05/release` so the deployed version and runtime commit can be checked explicitly.
+Render is configured from `main`, but the live service must be checked against the exact repository commit before a release is called deployed. CarePath v0.5 includes `GET /api/v05/release` for runtime version/commit verification.
 
 ## CarePath v0.5 — Federated Health Platform
 
-The v0.5 source retains the complete v0.4 operational demonstrator and adds the previously missing platform layers.
+### Operational capabilities preserved from v0.4
 
-### Existing operational capabilities preserved
-
-- 120 synthetic patients
-- OneRecord longitudinal patient view with provenance
+- 120 synthetic patients and provenance-aware OneRecord
 - Journey/referral state machine and closed-loop workflow
-- Appointment Management Centre
-- standalone and referral-linked bookings
-- requested, booked, checked-in, completed, cancelled and no-show appointment lifecycle
-- synthetic hospital bed capacity: General, High Care, ICU, Maternity and Paediatric
-- capacity-aware referral and appointment validation
-- alternative-facility suggestions when admission-dependent bookings lack synthetic capacity
+- Appointment Management Centre and referral-linked bookings
+- requested, booked, checked-in, completed, cancelled and no-show lifecycle
+- synthetic General, High Care, ICU, Maternity and Paediatric bed capacity
+- capacity-aware referral/booking validation and alternative facilities
 - Ambulance Availability & Patient Transfer Management
 - Basic, Advanced, ICU and Neonatal synthetic ambulance capability
-- patient-transfer lifecycle and referral/capacity linkage
 - Notification Centre
 - Medication & Vaccine Management
-- Care Gaps
-- Referral Outcome analytics with explicit non-ranking/risk-adjustment warning
-- national synthetic facility directory covering all nine provinces
-- province/city/type/service facility filtering and clickable facility operational views
-- Health Passport
-- patient and clinician Mobile App Preview
-- multiple demo roles and in-app user-type switcher
-- responsive desktop/tablet/mobile experience
+- Care Gaps and Referral Outcome analytics
+- national synthetic facility/service directory across all nine provinces
+- province/city/type/service filtering and clickable full facility operational views
+- Health Passport and Mobile App Preview
+- multiple demo roles with server-side access controls
 - Ayanda text/browser voice assistant with governed write confirmation
 - administrator-only OpenAI API settings
-- access/workflow/AI audit trail
+- workflow/access/AI audit trail
+- responsive desktop/tablet/mobile UX
 
-### New v0.5 capabilities
+### New v0.5 platform capabilities
 
 #### Emergency Patient Access / Break Glass
 
-- role-controlled emergency-access module
-- explicit emergency reason capture
-- demo password re-authentication before granting access
+- explicit emergency reason
+- clinical-role restriction
+- demo password re-authentication
 - 15-minute synthetic access grant
-- minimum-necessary emergency summary covering documented allergies, current medication, chronic conditions and recent encounter context
-- high-visibility audit event and access history
-- no silent security bypass
+- minimum-necessary allergy/medication/condition/encounter summary
+- audited access history and compliance-review path
 
-Production use requires enterprise MFA/re-authentication, ABAC/purpose enforcement, monitoring and compliance review.
+Production requires enterprise MFA/re-authentication, policy enforcement and monitoring.
 
 #### Consent & Identity Centre
 
-- federated patient-identity/MPI abstraction
-- multiple source-system identifiers per patient
-- source linkage rather than creation of a competing national patient identifier
-- consent/sharing-preference records
-- patient/admin preference update path
-- explicit warning that production matching requires an approved authoritative identity service and governed merge/unmerge
+- MPI/federated identity abstraction
+- multiple linked mock source-system identifiers
+- no competing national identifier invented by CarePath
+- consent/sharing-preference model
+- source provenance and identity-linkage warning
+
+Production requires an approved authoritative identity service and governed duplicate/merge/unmerge workflows.
 
 #### Healthcare Professional Workspace
 
-- authorised patient worklist
-- open referral workload
-- appointment workload
+- authorised patient workload
+- open referrals and appointments
 - role/facility-aware tasks
 - high-priority action queue
-- hand-off queue
-- source-grounded result-review context
-- task creation and governed task-state changes
+- hand-offs and result-review context
+- task creation/status APIs
 
 #### OneRecord extensions
 
-- care-plan records
-- synthetic discharge/specialist/care-document metadata
-- synthetic imaging-report metadata
-- source/provenance presentation
-- federated source-identifier count
+- care plans
+- discharge/specialist/care-document metadata
+- imaging-report metadata
+- provenance/source linkage
+- federated identifier visibility
 
-The prototype does not duplicate raw DICOM imaging into OneRecord; source references/metadata are the preferred architectural pattern.
+Raw imaging is not duplicated into the hackathon record; the architecture favours source references/metadata.
 
 #### CarePath Watch™
 
-Explainable operational early-warning rules for:
+Explainable operational rules identify:
 
 - referral SLA delay
-- return-feedback delay
+- missing return feedback
 - missed appointments
-- zero synthetic bed availability
-- high-severity ICU capacity constraints
+- zero synthetic bed capacity
+- critical ICU capacity constraints
 
-Each finding provides the triggering rule, evidence, owner and recommended permitted administrative action. **CarePath Watch findings are workflow/pathway signals, not diagnoses or unvalidated clinical predictions.**
+Each finding shows the rule, evidence, owner and permitted next administrative action. **CarePath Watch is not a diagnostic or unvalidated clinical prediction engine.**
 
 #### Hierarchical CarePath Command Centre
 
-A new management view supports the target hierarchy:
+The management experience now demonstrates:
 
-**South Africa → Province → District → Facility**
+**South Africa → Province → District → City → Facility → Service**
 
-It surfaces aggregated synthetic patient/referral flow, open referrals, appointments, bed availability and SLA exceptions. Further city/service drill-down remains a target refinement; the facility explorer already supports province and city filtering.
+It uses the same synthetic patient-flow, referral, facility/service and bed-capacity data rather than creating a parallel dashboard. Management views are intended to remain aggregated/de-identified unless patient-level access has a separate authorised purpose.
 
 #### Population Health Intelligence
 
 - aggregated/de-identified synthetic operational intelligence
-- provincial operations
+- province-level activity
 - service demand
 - open-referral burden
-- missed-appointment indicators
-- synthetic referral outcome totals
-- explicit prohibition on treating raw observed recovery/mortality as hospital-quality ranking
+- missed appointments
+- synthetic observed referral outcomes
+
+Observed recovery/mortality is not risk adjusted and must not be represented as a hospital-quality ranking.
 
 #### CarePath Exchange / FHIR demonstration gateway
 
-The v0.5 API exposes a synthetic standards-aware demonstration layer:
+The v0.5 API includes:
 
 - `GET /api/v05/fhir/metadata`
 - `GET /api/v05/fhir/Patient/:id`
@@ -130,53 +121,31 @@ The v0.5 API exposes a synthetic standards-aware demonstration layer:
 - `GET /api/v05/fhir/Appointment/:id`
 - `GET /api/v05/exchange/sources`
 
-Mock source adapters represent:
-
-- clinic EMR
-- laboratory
-- pharmacy
-- specialist/hospital system
-
-The intended flow is:
+Mock adapters represent a clinic EMR, laboratory, pharmacy and specialist/hospital source.
 
 **Source systems → CarePath Exchange → provenance-preserving OneRecord + Journey**
 
-This is a **FHIR R4-style hackathon facade**, not a claim of formal national-profile conformance, certification or live health-system connectivity.
+This is a FHIR R4-style hackathon facade, not formal conformance certification or a live health-system integration claim.
 
 #### Ayanda v0.5
 
-Ayanda now recognises deterministic navigation intents for:
+Ayanda recognises deterministic navigation for:
 
 - My Workspace
 - Emergency / Break Glass
 - Consent & Identity
 - CarePath Watch
-- hierarchical National Command Centre
-- Population Health Intelligence
+- National Command
+- Population Health
 - CarePath Exchange / FHIR
 
-A browser bridge routes those intents into the new v0.5 modules while preserving the existing Ayanda chat response and v0.4 navigation behaviour.
+The browser bridge preserves the original Ayanda conversation while opening the appropriate governed v0.5 module.
 
-## Target persistence architecture
+## Target PostgreSQL architecture
 
-A PostgreSQL/Prisma target schema now exists at:
+`apps/api/prisma/schema.prisma` defines the target persistent model for Patient, PatientIdentifier, ConsentRecord, BreakGlassEvent, CarePlan, ClinicalDocument, CareTask, IntegrationEvent, AccessEvent and AuditEvent.
 
-`apps/api/prisma/schema.prisma`
-
-It includes target entities for:
-
-- Patient
-- PatientIdentifier
-- ConsentRecord
-- BreakGlassEvent
-- CarePlan
-- ClinicalDocument
-- CareTask
-- IntegrationEvent
-- AccessEvent
-- AuditEvent
-
-**This schema is not yet wired as the runtime repository.** The current hackathon build remains deterministic in-memory/adaptor-backed. Do not represent PostgreSQL persistence as implemented until a database is provisioned, migrations are executed and the service repositories are switched to it.
+**Runtime truth:** the hackathon application is still deterministic/in-memory and adapter-backed. PostgreSQL is not yet the runtime repository. Do not claim persistent production storage until a database is provisioned, migrations run and the service repositories are switched.
 
 ## Demo accounts
 
@@ -196,44 +165,42 @@ Password for all seeded demo accounts: `CarePath!2026`
 | `admin` | Administrator |
 | `patient` | Patient — Thandi Mokoena |
 
-## Recommended v0.5 flagship demo
+## Flagship v0.5 demonstration
 
 1. Sign in as `clinician`.
-2. Ask Ayanda: **“Hey Ayanda, open Thandi Mokoena.”**
-3. Show Thandi’s synthetic longitudinal OneRecord, allergy, medication and provenance.
-4. Show the new care-plan/document extensions.
-5. Ask Ayanda: **“Open Consent and Identity.”** Show the federated source identifiers.
-6. Return to Journey and create/review the cardiology referral.
-7. Check destination facility/service and synthetic bed capacity.
-8. Coordinate the appointment.
-9. If transfer is required, show ambulance availability and patient-transfer orchestration.
-10. Ask Ayanda: **“Open CarePath Watch.”** Show explainable pathway exceptions.
-11. Switch to a management role and ask: **“Open National Command.”** Drill into a province.
-12. Open Population Health Intelligence and explain that management views are aggregate/de-identified.
-13. Open CarePath Exchange and show the mock source-system → FHIR-style gateway → OneRecord architecture.
-14. For an emergency demonstration, use **Emergency** / Break Glass with a specific reason and demo re-authentication; show the minimum-necessary emergency summary and audit event.
-15. Switch to the patient role to show Health Passport, appointments, medication/vaccination, notifications and journey visibility.
-16. Close with: **“The patient remains digitally visible throughout the healthcare journey.”**
+2. Say **“Hey Ayanda, open Thandi Mokoena.”**
+3. Show synthetic allergy, medication, history and source provenance.
+4. Show Care Plans/Documents within the extended OneRecord.
+5. Ask Ayanda to open **Consent & Identity** and show linked source identifiers.
+6. Create/review Thandi's cardiology referral and destination.
+7. Check synthetic service/bed capacity and coordinate the appointment.
+8. Demonstrate ambulance transfer where needed.
+9. Open **CarePath Watch** to show an explainable pathway exception.
+10. Demonstrate **Emergency / Break Glass** with reason + demo re-authentication.
+11. Switch to `manager`; open **National Command** and drill South Africa → Province → District → City → Facility → Service.
+12. Open **Population Health Intelligence** and explain de-identification.
+13. Open **CarePath Exchange** to show the mock source-system/FHIR flow.
+14. Switch to `patient` and show Health Passport, appointments, medication/vaccination, notifications and journey status.
+15. Close with: **“The patient remains digitally visible throughout the healthcare journey.”**
 
-## Canonical specification
+Detailed demo guide: `docs/demo/V0.5-FLAGSHIP-DEMO.md`
 
-The current single source of truth is:
+## Architecture and implementation status
 
-`docs/prompts/CAREPATH-MASTER-PROMPT.md`
-
-The canonical prompt is **v0.5 — Federated Health Platform & Hackathon Delivery Prompt** and supersedes conflicting implementation guidance in earlier addenda while preserving compatible completed functionality.
+- Canonical specification: `docs/prompts/CAREPATH-MASTER-PROMPT.md`
+- Federated architecture: `docs/architecture/V0.5-FEDERATED-ARCHITECTURE.md`
+- Release status: `docs/release/V0.5-IMPLEMENTATION-STATUS.md`
 
 ## Prototype and claims boundary
 
-All patient, facility, bed, ambulance, medication, vaccination, clinical, referral and outcome information is synthetic demonstration data.
+All patient, facility, bed, ambulance, medication, vaccination, clinical, referral and outcome information is synthetic.
 
-This release does **not** claim:
+CarePath v0.5 does **not** claim:
 
-- live NDoH/HPRS integration
-- live private hospital integration
-- live laboratory/pharmacy/imaging connectivity
-- live HIE/EMR integration
-- live national MPI/identity service
+- live NDoH/HPRS/HIE integration
+- live public/private hospital integration
+- live laboratory/pharmacy/imaging integration
+- live MPI/identity service
 - live bed-management or EMS/CAD/GPS feeds
 - production PostgreSQL persistence
 - enterprise MFA/SSO deployment
@@ -243,4 +210,4 @@ This release does **not** claim:
 - SAHPRA approval
 - production clinical use
 
-CarePath v0.5 demonstrates the **architecture, governed workflows and product experience** required to evolve toward those integrations without falsely representing them as complete.
+The product demonstrates the architecture, governed workflows and user experience needed to evolve toward those capabilities without presenting them as already completed.
