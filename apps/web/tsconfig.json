@@ -17,6 +17,6 @@
     "jsx": "react-jsx"
   },
   "include": ["src"],
-  "exclude": ["src/v05-platform.ts"],
+  "exclude": ["src/v05-platform.ts", "src/agent-centre.ts"],
   "references": []
 }
